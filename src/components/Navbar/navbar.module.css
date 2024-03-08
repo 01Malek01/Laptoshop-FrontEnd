@@ -1,0 +1,31 @@
+.navWrapper {
+  background: #19202f;
+}
+
+.navContainer {
+}
+
+.logo {
+  cursor: pointer;
+  filter: hue-rotate(-30deg);
+}
+.navList li {
+  cursor: pointer;
+}
+
+.icon {
+  cursor: pointer;
+  color: white;
+}
+
+.searchbox {
+  background: white;
+  height: 50%;
+}
+.searchbox .input {
+  background: transparent;
+  height: 100%;
+  outline: none;
+  border: none;
+  padding-left: 10px;
+}

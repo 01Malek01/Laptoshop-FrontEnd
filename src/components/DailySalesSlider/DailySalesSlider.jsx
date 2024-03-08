@@ -1,0 +1,52 @@
+import React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Image from 'next/image'
+import { Suspense } from "react";
+import styles from '../Sliders/sliders.module.css'
+
+function DailySalesSlider({ laptops }) {
+ var settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  autoplay: true,
+  speed: 3000,
+  autoplaySpeed: 6500,
+  cssEase: "linear",
+  arrows: false,
+
+ };
+ return (
+  <div className="slider-container">
+   <Slider {...settings}>
+    {
+     laptops.map((laptop) => {
+      return (
+       <div key={laptop._id} className=" bg-[#19202F] w-96    p-2 h-[400px] ">
+        <figure><Image src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
+        <div className="card-body">
+         <h2 className="card-title">
+          {laptop.brand} {laptop.model}
+          <div className="badge badge-secondary">NEW</div>
+         </h2>
+         <p>{laptop.price}$</p>
+         <div className="card-actions justify-end">
+          <div className="badge badge-outline">Laptops</div>
+          <div className="badge badge-outline">Electronics</div>
+         </div>
+        </div>
+       </div>
+      )
+     })
+    }
+   </Slider>
+  </div>
+ );
+}
+
+export default DailySalesSlider;
