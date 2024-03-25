@@ -15,7 +15,7 @@ function DailySalesSlider({ laptops }) {
   slidesToScroll: 1,
   initialSlide: 0,
   autoplay: true,
-  speed: 3000,
+  speed: 1000,
   autoplaySpeed: 6500,
   cssEase: "linear",
   arrows: false,
@@ -27,7 +27,7 @@ function DailySalesSlider({ laptops }) {
     {
      laptops.map((laptop) => {
       return (
-       <div key={laptop._id} className=" bg-[#19202F] w-96    p-2 h-[400px] ">
+       <div key={laptop._id} className=" bg-[#19202F] sm:flex sm:justify-center md:w-96 md:p-2 h-[400px] ">
         <figure><Image src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
         <div className="card-body">
          <h2 className="card-title">
@@ -35,7 +35,7 @@ function DailySalesSlider({ laptops }) {
           <div className="badge badge-secondary">NEW</div>
          </h2>
          <p>{laptop.price}$</p>
-         <div className="card-actions justify-end">
+         <div className="card-actions justify-center md:justify-end">
           <div className="badge badge-outline">Laptops</div>
           <div className="badge badge-outline">Electronics</div>
          </div>

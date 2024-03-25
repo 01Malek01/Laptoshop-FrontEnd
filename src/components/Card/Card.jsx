@@ -3,7 +3,7 @@ import styles from './card.module.css'
 const Card = ({ title, desc, icon, externalStyles }) => {
  return (
   <>
-   <div className={`${styles.card} bg-slate-200 border-none w-[300px] h-[125px] flex flex-row gap-5 justify-around items-center ${externalStyles}`} >
+   <div className={`${styles.card} bg-slate-200 border-none md:w-[300px] h-[125px] flex flex-row gap-5 justify-around items-center ${externalStyles}`} >
     {
      icon && (
       <div className={`${styles.icon}`}>

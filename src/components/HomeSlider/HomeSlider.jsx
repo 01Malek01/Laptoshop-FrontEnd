@@ -7,11 +7,7 @@ import { useEffect } from "react";
 import styles from '../Sliders/sliders.module.css'
 
 function HomeSlider({ pics }) {
- useEffect(() => {
-  console.log('====================================');
-  console.log(pics);
-  console.log('====================================');
- })
+
 
  var settings = {
   dots: true,
@@ -34,7 +30,7 @@ function HomeSlider({ pics }) {
      pics && pics.map((pic) => {
       return (
        <div key={pic.id} className='w-[300px] h-[400px] relative '>
-        <Image className={styles.sliderImage} src={pic.src} alt={pic.alt} fill />
+        <Image className={styles.sliderImage} src={pic.src} alt={pic.alt} fill sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' priority />
        </div>
       )
      })
