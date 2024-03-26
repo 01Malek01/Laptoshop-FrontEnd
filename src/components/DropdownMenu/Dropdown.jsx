@@ -2,15 +2,18 @@
 import React from 'react';
 import { useDropdownContext } from '../Provider/DropdownContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 function Dropdown() {
  const { selectedValue, setSelectedValue } = useDropdownContext();
+ const router = useRouter();
 
  const handleItemClick = (e) => {
   const newValue = e.target.textContent.trim();
   setSelectedValue(newValue);
-  localStorage.setItem('selectedValue', newValue);
-  window.location.reload();
+  // localStorage.setItem('selectedValue', newValue);
+  router.refresh();
+  console.log(newValue);
  };
 
  return (

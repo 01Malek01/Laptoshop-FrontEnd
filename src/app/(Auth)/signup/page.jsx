@@ -1,8 +1,9 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 const Signup = () => {
   const router = useRouter()
+  const [errorMessage, setErrorMessage] = useState('') // State for error message
   const handleSubmit = async (e) => {
     e.preventDefault()
     const name = e.target[0].value
@@ -24,6 +25,10 @@ const Signup = () => {
       router.push('/');
       router.refresh();
 
+    } else if (res.status === 400) {
+      setErrorMessage('Email already exists')
+    } else {
+      setErrorMessage('Signup failed. Please try again.')
     }
     console.log(res);
   }
@@ -50,6 +55,7 @@ const Signup = () => {
       </label>
 
       <button className="btn btn-primary mt-2">Register</button>
+      {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
     </form>
   )
 }

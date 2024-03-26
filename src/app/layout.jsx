@@ -20,13 +20,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} container`}>
-        <Navbar jwt={jwt} />
-        <JWTProvider jwt={jwt}>
-          <DropdownProvider>
-          {children}
-          </DropdownProvider>
-        </JWTProvider>
-        <Footer />
+        <DropdownProvider>
+          <Navbar jwt={jwt} />
+          <JWTProvider jwt={jwt}>
+            {children}
+          </JWTProvider>
+          <Footer />
+        </DropdownProvider>
       </body>
     </html>
   );

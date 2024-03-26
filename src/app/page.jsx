@@ -40,9 +40,7 @@ export default async function Home() {
         <div className={`${styles.products} bg-[#ffffff] flex justify-center items-center m-auto`}>
           <Products laptops={laptops} showMoreButton={true} />
         </div>
-        {
-          jwt && <p>you are logged in</p>
-        }
+
       </div>
     </>
 
