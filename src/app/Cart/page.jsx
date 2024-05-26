@@ -1,70 +1,93 @@
-import React from 'react'
+'use client'
+import { useContext, useEffect } from "react";
+import useCart from "@/hooks/fetchCart";
+import Image from 'next/image';
+import { JwtContext } from "@/components/Provider/Provider";
+function Page() {
+  const jwt = useContext(JwtContext);
 
-function page() {
- return (
-  <div className="overflow-x-auto bg-slate-400">
-   <table className="table">
-    {/* head */}
-    <thead>
-     <tr>
-      <th>
-       <label>
-        <input type="checkbox" className="checkbox" />
-       </label>
-      </th>
-      <th>Name</th>
-      <th>Job</th>
-      <th>Favorite Color</th>
-      <th></th>
-     </tr>
-    </thead>
-    <tbody>
-     {/* row 1 */}
-     <tr>
-      <th>
-       <label>
-        <input type="checkbox" className="checkbox" />
-       </label>
-      </th>
-      <td>
-       <div className="flex items-center gap-3">
-        <div className="avatar">
-         <div className="mask mask-squircle w-12 h-12">
-          <img src="/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-         </div>
-        </div>
-        <div>
-         <div className="font-bold">Hart Hagerty</div>
-         <div className="text-sm opacity-50">United States</div>
-        </div>
-       </div>
-      </td>
-      <td>
-       Zemlak, Daniel and Leannon
-       <br />
-       <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
-      </td>
-      <td>Purple</td>
-      <th>
-       <button className="btn btn-ghost btn-xs">details</button>
-      </th>
-     </tr>
-    
-    </tbody>
-    {/* foot */}
-    <tfoot>
-     <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Job</th>
-      <th>Favorite Color</th>
-      <th></th>
-     </tr>
-    </tfoot>
+  const cart = useCart();
+  const products = cart.products;
+  const items = cart.other?.data?.items;
 
-   </table>
-  </div>
- )
+  let result = [];
+  let itemsResult = [];
+  for (let i = 0; i < products?.length; i++) {
+    result.push(products[i])
+  };
+  for (let i = 0; i < items?.length; i++) {
+    itemsResult.push(items[i])
+  }
+
+  const removeItem = async (id) => {
+    try {
+      if (!id) {
+        throw new Error('Item ID is required');
+      }
+
+      const res = await fetch('http://localhost:5000/api/v1/cart', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}` // Your access token
+        },
+        body: JSON.stringify({ id: id }),
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
+  return (
+    <div className='w-full bg-slate-100 text-black h-full'>
+
+
+      <div className="overflow-x-auto">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Price</th>
+              <th>Model</th>
+              <th>Image</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              result.map(el => (
+                <tr key={el._id}>
+                  <th>{el.brand}</th>
+                  <td>{el.model}</td>
+                  <td>{el.price}$</td>
+                  <td><Image src={el.image} width={100} height={100} /></td>
+                  <td>N/A</td>
+                  <td><button className='btn btn-error rounded' onClick={() => removeItem(el._id)}>Remove</button></td>
+                </tr>
+              ))
+            }
+
+
+          </tbody>
+        </table>
+        <div className="divider"></div>
+        
+        <div className="text-center font-bold m-10">Total price: {cart.other?.data?.totalPrice.toFixed(2)} $</div>
+      </div>
+
+
+
+
+
+
+    </div>
+  )
 }
 
-export default page
+export default Page;

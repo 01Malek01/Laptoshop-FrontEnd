@@ -1,15 +1,3 @@
-.navWrapper {
-  background: #19202f;
-}
-
-.logo {
-  cursor: pointer;
-  filter: hue-rotate(-30deg);
-}
-.navList li {
-  cursor: pointer;
-}
-
 .icon {
   cursor: pointer;
   color: white;

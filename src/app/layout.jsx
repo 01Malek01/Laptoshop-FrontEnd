@@ -6,6 +6,7 @@ import Footer from "@/components/Footer/Footer";
 import { cookies } from "next/headers";
 import { JWTProvider, JwtContext } from "@/components/Provider/Provider";
 import { DropdownProvider } from "@/components/Provider/DropdownContext";
+import { QuantityProvider } from "@/components/Provider/QuantityContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({ children }) {
         <DropdownProvider>
           <Navbar jwt={jwt} />
           <JWTProvider jwt={jwt}>
-            {children}
+            <QuantityProvider>
+              {children}
+            </QuantityProvider>
           </JWTProvider>
           <Footer />
         </DropdownProvider>

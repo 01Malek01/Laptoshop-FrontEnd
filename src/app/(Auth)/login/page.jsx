@@ -11,7 +11,7 @@ const Login = () => {
     e.preventDefault()
     const email = e.target[0].value
     const password = e.target[1].value
-    console.log(email, password)
+    // console.log(email, password)
 
     try {
       const res = await fetch('http://localhost:5000/api/v1/users/login', {

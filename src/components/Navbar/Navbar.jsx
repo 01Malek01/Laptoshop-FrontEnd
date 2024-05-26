@@ -1,9 +1,8 @@
 'use client'
-import React, { useEffect } from 'react'
-import styles from './Navbar.module.css'
-import Image from 'next/image'
+import React, { useEffect } from 'react';
+import styles from './navbar.module.css';
+import Image from 'next/image';
 import { CgProfile } from "react-icons/cg";
-import { IoIosArrowDown } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
 import Menus from '../Menus/Menus';
 import MobileMenus from '../MobileMenus/MobileMenus';
@@ -11,8 +10,8 @@ import { FiMenu } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import Link from 'next/link'
 import { useState } from 'react';
-import Dropdown from '../DropdownMenu/Dropdown';
 import { useDropdownContext } from '../Provider/DropdownContext';
+import SearchBox from '../SearchBox/searchBox';
 
 
 
@@ -35,11 +34,7 @@ const Navbar = ({ jwt }) => {
     }
 
   }, [jwt])
-  const handleInputChange = (e) => {
-    setQuery(e.target.value);
-    console.log(e.target.value);
 
-  }
 
   return (
     <>
@@ -49,18 +44,9 @@ const Navbar = ({ jwt }) => {
             <Image src="/assets/logo.jpg" alt="logo" width={70} height={70} />
           </div>
           <div className={`${styles.searchbox} md:w-1/2 `}>
-            <form action="" className={`${styles.form} flex flex-row justify-between items-center h-full`}>
-              <input type="text" placeholder='Search for products' className={`${styles.input} w-[60%]`} onChange={handleInputChange} />
-              <div className={` flex flex-col md:flex-row md:gap-4 mr-4 items-center m-2 md:p-0 `}>
-                <div className="dropdown dropdown-hover">
-                  <div tabIndex={0} role="button" className="flex">
-                    <span className={`${styles.label} text-black `}>{selectedValue}</span> <IoIosArrowDown size={20} className={` `} />
-                  </div>
-                  <Dropdown />
-                </div>
-                <button className={`${styles.btn} bg-[#19202f] p-1 md:w-[80px] `}>Search</button>
-              </div>
-            </form>
+            {/* <SearchBox /> */}
+
+              <SearchBox />
           </div>
           <div className={`flex flex-row gap-4 my-3 md:my-0 `}>
             <div className={`${styles.profile}`}>

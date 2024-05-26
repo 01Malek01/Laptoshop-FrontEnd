@@ -1,7 +1,9 @@
-'use client'
+'use client';
+
 import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { JwtContext } from '@/components/Provider/Provider';
+import Image from 'next/image'
 
 function Profile() {
   const [user, setUser] = useState({});
@@ -10,6 +12,7 @@ function Profile() {
   const [editEmail, setEditEmail] = useState(false);
   const [newEmail, setNewEmail] = useState(user?.email || ''); // Initialize newEmail with user's email
   const [error, setError] = useState(null);
+  const [file, setFile] = useState(null);
   const router = useRouter();
   const jwt = useContext(JwtContext);
 
@@ -122,84 +125,122 @@ function Profile() {
   const editEmailHandler = () => {
     setEditEmail(!editEmail);
   }
- 
+  const handleFileChange = async (e) => {
+    setFile(e.target.files[0]);
+  };
+const handleFileUpload = async (e) => {
+  const formData = new FormData();
+  formData.append('image', file);
+  const res = await fetch('http://localhost:5000/api/v1/users/updatePhoto', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${jwt}`
+    },
+    body: formData
+  })
+  window.location.href = "/profile";
+}
+
   return (
     <>
-      <div className='flex justify-start items-start p-5'>
+
+      <form action="" className="container min-w-[200px] max-w-[80%]  mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
+        <div className='flex justify-start items-start p-5 '>
+          {
+            user && (
+              <p className='text-2xl text-black'>Hello, {user.name}</p>
+
+            )
+          }
+        </div>
+        <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
+
+          <div className="flex justify-center items-center flex-col gap-5">
+            <Image src={user?.image} alt="profile" width={150} height={150} />
+            <div className="flex justify-center items-center flex-col mx-auto">
+              <span className="text-black p-4">Upload A New Profile Photo 👇</span>
+              <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
+              <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleFileUpload}>Upload</button>
+            </div>
+          </div>
+          <div>
+
+            <div className="flex justify-center items-center flex-wrap">
+
+              <span className="text-black p-4">Name</span>
+              {editName ? (
+                <>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <input
+                      type="text"
+                      className="grow"
+                      value={newName}
+                      placeholder='Enter your new username'
+                      onChange={(e) => setNewName(e.target.value)} // Update newName on input change
+                    />
+                  </label>
+                  <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveName}>
+                    Save Name
+                  </button>
+                  <button type="button" className="btn btn-sm ml-1 h-[80%] " onClick={() => setEditName(false)}>Cancel</button>
+
+                </>
+              ) : (
+                <label className="input input-bordered flex items-center gap-2">
+                  <input
+                    type="text"
+                    className="grow"
+                    value={user?.name}
+                    disabled={editName}
+                  />
+                  <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={editNameHandler}>
+                    Edit Name
+                  </button>
+                </label>
+              )}
+            </div>
+
+            <div className="flex justify-center items-center flex-wrap">
+              <span className="text-black p-4">Email</span>
+              {editEmail ? (
+                <>
+                  <input
+                    type="email" // Set type to email for validation
+                    className="grow input "
+                    placeholder="Enter your new email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)} // Update newEmail on input change
+                  />
+                  <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveEmail}>
+                    Save Email
+                  </button>
+                  <button type="button" className="btn btn-sm ml-1 h-[80%]  " onClick={() => setEditEmail(false)}>Cancel</button>
+
+                </>
+              ) : (
+                <label className="input input-bordered flex items-center gap-2">
+                  <input
+                    type="text" // Change to email for display consistency
+                    className="grow"
+                    value={user?.email}
+                    disabled={editEmail}
+                  />
+                  <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%]  rounded-lg text-sm" onClick={editEmailHandler}>
+                    Edit Email
+                  </button>
+                </label>
+              )}
+            </div>
+           
+          </div>
+        </div>
         {
-          user && (
-            <p className='text-2xl text-black'>Hello, {user.name}</p>
-
-          )
+          user.emailConfirmed == false &&
+          <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
         }
-      </div>
-
-      <form action="" className="container w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
-        <div className="flex justify-center items-center">
-          <span className="text-black p-4">Name</span>
-          {editName ? (
-            <>
-              <label className="input input-bordered flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow"
-                  value={newName}
-                  placeholder='Enter your new username'
-                  onChange={(e) => setNewName(e.target.value)} // Update newName on input change
-                />
-              </label>
-              <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveName}>
-                Save Name
-              </button>
-            </>
-          ) : (
-            <label className="input input-bordered flex items-center gap-2">
-              <input
-                type="text"
-                className="grow"
-                value={user?.name}
-                disabled={editName}
-              />
-              <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg" onClick={editNameHandler}>
-                Edit Name
-              </button>
-            </label>
-          )}
-        </div>
-
-        <div className="flex justify-center items-center">
-          <span className="text-black p-4">Email</span>
-          {editEmail ? (
-            <>
-              <input
-                type="email" // Set type to email for validation
-                className="grow"
-                placeholder="Enter your new email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)} // Update newEmail on input change
-              />
-              <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveEmail}>
-                Save Email
-              </button>
-            </>
-          ) : (
-            <label className="input input-bordered flex items-center gap-2">
-              <input
-                type="text" // Change to email for display consistency
-                className="grow"
-                value={user?.email}
-                disabled={editEmail}
-              />
-              <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%]  rounded-lg" onClick={editEmailHandler}>
-                Edit Email
-              </button>
-            </label>
-          )}
-        </div>
-        <button className="btn btn-primary w-full" onClick={handleEmailConfirmation}>Confirm Email</button>
-        <button className="btn btn-primary w-full" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
       </form>
-
+        
     </>
   )
 }

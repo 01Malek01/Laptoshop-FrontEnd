@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './card2.module.css'
 import Image from 'next/image'
 const Card2 = ({ title, desc, icon, image, externalStyles, btnTitle }) => {

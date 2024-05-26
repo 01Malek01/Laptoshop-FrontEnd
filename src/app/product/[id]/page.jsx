@@ -7,13 +7,16 @@ import axios from 'axios';
 import { JwtContext } from '@/components/Provider/Provider';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { ToastContainer, toast, Slide } from 'react-toastify';
-// import CustomAlert from '@/components/CustomAlert/CustomAlert';
+import QuantityInput from '@/components/quantityInput/QuantityInput';
+import { useQuantityContext } from '@/components/Provider/QuantityContext';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 function Product() {
  const [laptop, setLaptop] = useState({});
  const [authorized, setAuthorized] = useState(false);
  const params = useParams();
  const jwt = useContext(JwtContext);
+ const { quantity } = useQuantityContext();
  useEffect(() => {
   const fetchLaptop = async () => {
    try {
@@ -44,43 +47,42 @@ function Product() {
   fetchLaptop();
  }, [params.id]);
 
+ const notify = () => {
+
+  toast.success("Product Added To Cart Successfully !", {
+   position: "top-center"
+  });
+
+
+ };
  const handleAddToCart = async () => {
   try {
-   const response = await axios.post('http://localhost:5000/api/v1/cart/add', {
-    laptopId: params.id
-   }, {
+    const res = await fetch('http://localhost:5000/api/v1/cart', {
+    method: 'POST',
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ${jwt}` // Your access token
-    }
-   });
-   console.log(response.data);
-   // notify();
+    },
+    body: JSON.stringify({
+     productId: params.id,
+     quantity
+    })
+    }).then(() => notify());
   } catch (error) {
    console.error('Error:', error);
    // Handle errors (e.g., display error message to user)
   }
+
  }
 
- // const notify = () => {
- //  toast.success(`Item  added to cart successfully `, {
- //   position: "top-center",
- //   autoClose: 2000,
- //   hideProgressBar: true,
- //   closeOnClick: true,
- //   pauseOnHover: true,
- //   draggable: true,
- //   progress: 0,
- //   theme: "light",
- //   transition: Slide,
- //  })
- // }
 
 
 
  return (
   <>
-  {/* <CustomAlert /> */}
+   <ToastContainer />
+
+   {/* <CustomAlert /> */}
    {
     authorized ? (
      <div className='bg-white flex justify-center items-center'>
@@ -89,17 +91,26 @@ function Product() {
        <div className='flex flex-col justify-center items-center h-screen text-black   '>
         <Image src={laptop.image} alt={laptop.title} width={500} height={500} />
        </div>
-       <div className='flex flex-col justify-center gap-2 items-start h-screen text-black text-[25px]'>
-        <div>Brand:{laptop.brand}</div>
-        <div>Model:{laptop.model}</div>
-        <div>Processor:{laptop.processor}</div>
-        <div>Ram:{laptop.ram}</div>
-        <div>Storage:{laptop.storage}</div>
-        <div>Average Rating:{laptop.averageRating}</div>
-        <div>Total Ratings:{laptop.numOfRatings}</div>
-        <div>Price:{laptop.price}$</div>
-        <button className='btn' onClick={handleAddToCart}>Add To Cart</button>
+       <div class="flex flex-col justify-center items-center h-screen">
+        <div class="max-w-md space-y-4">
+         <h1 class="text-3xl font-bold text-gray-800">Product Details</h1>
+         <div class="flex flex-col gap-2">
+          <div class="text-gray-700">Brand: <span class="font-medium text-black">{laptop.brand}</span></div>
+          <div class="text-gray-700">Model: <span class="font-medium text-black">{laptop.model}</span></div>
+          <div class="text-gray-700">Processor: <span class="font-medium text-black">{laptop.processor}</span></div>
+          <div class="text-gray-700">Ram: <span class="font-medium text-black">{laptop.ram}</span></div>
+          <div class="text-gray-700">Storage: <span class="font-medium text-black">{laptop.storage}</span></div>
+          <div class="text-gray-700">Average Rating: <span class="font-medium text-black">{laptop.averageRating}</span></div>
+          <div class="text-gray-700">Total Ratings: <span class="font-medium text-black">{laptop.numOfRatings}</span></div>
+          <div class="text-gray-700">Price: <span class="font-medium text-black">{laptop.price}$</span></div>
+         </div>
+         <div class="flex justify-between items-center flex-col gap-5">
+          <QuantityInput />
+          <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={handleAddToCart} >Add To Cart</button>
+         </div>
+        </div>
        </div>
+
       </div>
      </div>
     ) : (
