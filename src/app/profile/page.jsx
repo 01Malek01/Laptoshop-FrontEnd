@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { JwtContext } from '@/components/Provider/Provider';
-import Image from 'next/image'
+import Image from 'next/image';
 
 function Profile() {
   const [user, setUser] = useState({});
   const [editName, setEditName] = useState(false);
-  const [newName, setNewName] = useState(user?.name || ''); // Initialize newName with user's name
+  const [newName, setNewName] = useState('');
   const [editEmail, setEditEmail] = useState(false);
-  const [newEmail, setNewEmail] = useState(user?.email || ''); // Initialize newEmail with user's email
+  const [newEmail, setNewEmail] = useState('');
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
   const router = useRouter();
@@ -18,17 +18,28 @@ function Profile() {
 
   useEffect(() => {
     if (jwt) {
-      const res = fetch(`http://localhost:5000/api/v1/users/me`, {
+      fetchUserData();
+    }
+  }, [jwt]);
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/v1/users/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}` // Your access token
+          'Authorization': `Bearer ${jwt}`
         }
-
-      }).then(res => res.json()).then(res => setUser(res.data?.user))
-
+      });
+      const data = await res.json();
+      setUser(data.data?.user);
+      setNewName(data.data?.user.name);
+      setNewEmail(data.data?.user.email);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
     }
-  }, [jwt])
+  };
+
   const handleLogout = async () => {
     try {
       const res = await fetch('http://localhost:5000/api/v1/users/logout', {
@@ -40,25 +51,23 @@ function Profile() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to logout'); // Handle logout errors gracefully (e.g., display an error message)
+        throw new Error('Failed to logout');
       }
 
       console.log('Logged out successfully');
-      setUser({}); // Clear user data locally
-      // router.push('/login');
+      setUser({});
       window.location.href = "/login";
     } catch (error) {
       console.error('Error logging out:', error);
-      setError('Logout failed. Please try again.'); // Set an error state for UI display
+      setError('Logout failed. Please try again.');
     }
   };
 
   const handleSaveName = async (e) => {
     e.preventDefault();
-    if (!newName) return; // Prevent saving empty name
+    if (!newName) return;
 
     try {
-      // Update user name on the server using the API (replace with your API call)
       const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
         method: 'PATCH',
         headers: {
@@ -69,21 +78,19 @@ function Profile() {
       });
 
       const updatedUser = await res.json();
-      setUser(updatedUser.data?.user); // Update local state
-      setNewName(updatedUser.data?.user.name); // Update newName for display
-      setEditName(false); // Close edit mode
+      setUser(updatedUser.data?.user);
+      setNewName(updatedUser.data?.user.name);
+      setEditName(false);
     } catch (error) {
       console.error('Error updating name:', error);
-      // Handle errors appropriately (e.g., display an error message to the user)
     }
   };
 
   const handleSaveEmail = async (e) => {
     e.preventDefault();
-    if (!newEmail) return; // Prevent saving empty email
+    if (!newEmail) return;
 
     try {
-      // Update user email on the server using the API (replace with your API call)
       const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
         method: 'PATCH',
         headers: {
@@ -94,155 +101,136 @@ function Profile() {
       });
 
       const updatedUser = await res.json();
-      setUser(updatedUser.data?.user); // Update local state
-      setNewEmail(updatedUser.data?.user.email); // Update newEmail for display
-      setEditEmail(false); // Close edit mode
+      setUser(updatedUser.data?.user);
+      setNewEmail(updatedUser.data?.user.email);
+      setEditEmail(false);
     } catch (error) {
       console.error('Error updating email:', error);
-      // Handle errors appropriately (e.g., display an error message to the user)
     }
   };
 
-
   const handleEmailConfirmation = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:5000/api/v1/users/confirmMyEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwt}`
-      },
-      credentials: 'include',
-    })
-  }
+    try {
+      await fetch('http://localhost:5000/api/v1/users/confirmMyEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`
+        },
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error('Error confirming email:', error);
+    }
+  };
 
-  const editNameHandler = () => {
-
-    setEditName(!editName);
-
-  }
-
-  const editEmailHandler = () => {
-    setEditEmail(!editEmail);
-  }
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-const handleFileUpload = async (e) => {
-  const formData = new FormData();
-  formData.append('image', file);
-  const res = await fetch('http://localhost:5000/api/v1/users/updatePhoto', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${jwt}`
-    },
-    body: formData
-  })
-  window.location.href = "/profile";
-}
+
+  const handleFileUpload = async (e) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      await fetch('http://localhost:5000/api/v1/users/updatePhoto', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        },
+        body: formData
+      });
+      window.location.href = "/profile";
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
 
   return (
-    <>
-
-      <form action="" className="container min-w-[200px] max-w-[80%]  mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
-        <div className='flex justify-start items-start p-5 '>
-          {
-            user && (
-              <p className='text-2xl text-black'>Hello, {user.name}</p>
-
-            )
-          }
-        </div>
-        <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
-
-          <div className="flex justify-center items-center flex-col gap-5">
-            <Image src={user?.image} alt="profile" width={150} height={150} />
-            <div className="flex justify-center items-center flex-col mx-auto">
-              <span className="text-black p-4">Upload A New Profile Photo 👇</span>
-              <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
-              <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleFileUpload}>Upload</button>
-            </div>
+    <form className="container min-w-[200px] md:max-w-[80%] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
+      <div className='flex justify-start items-start p-5'>
+        {user && <p className='text-2xl text-black'>Hello, {user.name}</p>}
+      </div>
+      <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
+        <div className="flex justify-center items-center flex-col gap-5">
+          <Image src={user?.image} alt="profile" width={150} height={150} />
+          <div className="flex justify-center items-center flex-col mx-auto">
+            <span className="text-black p-4">Upload A New Profile Photo 👇</span>
+            <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
+            <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleFileUpload}>Upload</button>
           </div>
-          <div>
-
-            <div className="flex justify-center items-center flex-wrap">
-
-              <span className="text-black p-4">Name</span>
-              {editName ? (
-                <>
-                  <label className="input input-bordered flex items-center gap-2">
-                    <input
-                      type="text"
-                      className="grow"
-                      value={newName}
-                      placeholder='Enter your new username'
-                      onChange={(e) => setNewName(e.target.value)} // Update newName on input change
-                    />
-                  </label>
-                  <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveName}>
-                    Save Name
-                  </button>
-                  <button type="button" className="btn btn-sm ml-1 h-[80%] " onClick={() => setEditName(false)}>Cancel</button>
-
-                </>
-              ) : (
+        </div>
+        <div>
+          <div className="flex justify-center items-center flex-wrap">
+            <span className="text-black p-4">Name</span>
+            {editName ? (
+              <>
                 <label className="input input-bordered flex items-center gap-2">
                   <input
                     type="text"
                     className="grow"
-                    value={user?.name}
-                    disabled={editName}
+                    value={newName}
+                    placeholder='Enter your new username'
+                    onChange={(e) => setNewName(e.target.value)}
                   />
-                  <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={editNameHandler}>
-                    Edit Name
-                  </button>
                 </label>
-              )}
-            </div>
-
-            <div className="flex justify-center items-center flex-wrap">
-              <span className="text-black p-4">Email</span>
-              {editEmail ? (
-                <>
-                  <input
-                    type="email" // Set type to email for validation
-                    className="grow input "
-                    placeholder="Enter your new email"
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)} // Update newEmail on input change
-                  />
-                  <button type="button" className="btn btn-sm ml-2 h-[80%] " onClick={handleSaveEmail}>
-                    Save Email
-                  </button>
-                  <button type="button" className="btn btn-sm ml-1 h-[80%]  " onClick={() => setEditEmail(false)}>Cancel</button>
-
-                </>
-              ) : (
-                <label className="input input-bordered flex items-center gap-2">
-                  <input
-                    type="text" // Change to email for display consistency
-                    className="grow"
-                    value={user?.email}
-                    disabled={editEmail}
-                  />
-                  <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%]  rounded-lg text-sm" onClick={editEmailHandler}>
-                    Edit Email
-                  </button>
-                </label>
-              )}
-            </div>
-           
+                <button type="button" className="btn btn-sm ml-2 h-[80%]" onClick={handleSaveName}>
+                  Save Name
+                </button>
+                <button type="button" className="btn btn-sm ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
+              </>
+            ) : (
+              <label className="input input-bordered flex items-center gap-2">
+                <input
+                  type="text"
+                  className="grow"
+                  value={user?.name}
+                  disabled={editName}
+                />
+                <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={() => setEditName(true)}>
+                  Edit Name
+                </button>
+              </label>
+            )}
+          </div>
+          <div className="flex justify-center items-center flex-wrap">
+            <span className="text-black p-4">Email</span>
+            {editEmail ? (
+              <>
+                <input
+                  type="email"
+                  className="grow input"
+                  placeholder="Enter your new email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                />
+                <button type="button" className="btn btn-sm ml-2 h-[80%]" onClick={handleSaveEmail}>
+                  Save Email
+                </button>
+                <button type="button" className="btn btn-sm ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
+              </>
+            ) : (
+              <label className="input input-bordered flex items-center gap-2">
+                <input
+                  type="text"
+                  className="grow"
+                  value={user?.email}
+                  disabled={editEmail}
+                />
+                <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={() => setEditEmail(true)}>
+                  Edit Email
+                </button>
+              </label>
+            )}
           </div>
         </div>
-        {
-          user.emailConfirmed == false &&
-          <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
-        }
-        <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
-      </form>
-        
-    </>
-  )
+      </div>
+      {!user.emailConfirmed && (
+        <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
+      )}
+      <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
+    </form>
+  );
 }
 
-export default Profile 
+export default Profile;

@@ -13,7 +13,6 @@ function Dropdown() {
   setSelectedValue(newValue);
   // localStorage.setItem('selectedValue', newValue);
   router.refresh();
-  console.log(newValue);
  };
 
  return (

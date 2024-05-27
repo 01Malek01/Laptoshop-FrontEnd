@@ -2,11 +2,11 @@ import React from 'react'
 import styles from './menuBtn.module.css'
 import { IoIosArrowDown } from 'react-icons/io'
 import Link from 'next/link'
-const MenuBtn = ({ label, listItems, href }) => {
+const MenuBtn = ({ label, listItems, href,onClick }) => {
   return (
     <Link href={href} >
       <div className={`dropdown ${listItems?.length > 0 ? 'dropdown-hover' : ''}`}>
-        <div tabIndex={0} role="button" className="flex">
+        <div tabIndex={0} role="button" className="flex" onClick={onClick}>
           <span className={`${styles.label} text-black text-xl md:text-md hover:underline `}>{label}</span> <IoIosArrowDown size={20} className={`${listItems?.length > 0 ? ' ' : 'hidden'} `} />
         </div>
         {

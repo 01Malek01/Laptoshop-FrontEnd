@@ -43,6 +43,7 @@ function Page() {
   };
 
 
+
   return (
     <div className='w-full bg-slate-100 text-black h-full'>
 
@@ -51,7 +52,7 @@ function Page() {
         <table className="table">
           {/* head */}
           <thead>
-            <tr>
+            <tr className="text-center">
               <th>Brand</th>
               <th>Price</th>
               <th>Model</th>
@@ -62,11 +63,11 @@ function Page() {
           <tbody>
             {
               result.map(el => (
-                <tr key={el._id}>
+                <tr key={el._id} className="text-center ">
                   <th>{el.brand}</th>
                   <td>{el.model}</td>
                   <td>{el.price}$</td>
-                  <td><Image src={el.image} width={100} height={100} /></td>
+                  <td className="flex items-center justify-center"><Image src={el.image} width={100} height={100} /></td>
                   <td>N/A</td>
                   <td><button className='btn btn-error rounded' onClick={() => removeItem(el._id)}>Remove</button></td>
                 </tr>
@@ -78,7 +79,10 @@ function Page() {
         </table>
         <div className="divider"></div>
         
-        <div className="text-center font-bold m-10">Total price: {cart.other?.data?.totalPrice.toFixed(2)} $</div>
+        <div className="text-center font-bold m-10 flex-col gap-5"><div>Total price: {cart.other?.data?.totalPrice.toFixed(2)} $</div>
+          <button className="btn btn-primary m-auto text-center mt-5">Checkout</button>
+
+        </div>
       </div>
 
 

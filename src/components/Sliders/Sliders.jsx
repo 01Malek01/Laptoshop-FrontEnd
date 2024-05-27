@@ -7,27 +7,20 @@ import HomeSlider from '../HomeSlider/HomeSlider'
 
 const pics = [
  {
-  src: '/assets/electronic-device-balancing-concept (1).jpg',
-  alt: 'Image By FreePik',
+  src: '/assets/one.png',
+  alt: 'laptop',
   id: 1
  },
  {
-  src: '/assets/electronic-device-balancing-concept.jpg',
-  alt: 'Image By FreePik',
+  src: '/assets/two.png',
+  alt: 'laptop',
   id: 2
  },
  {
-  src: '/assets/still-life-books-versus-technology.jpg',
-  alt: 'Image By FreePik',
+  src: '/assets/three.png',
+  alt: 'laptop',
   id: 3
- },
- {
-
-  src: '/assets/top-view-smartphone-with-keyboard-charger.jpg',
-  alt: 'Image By FreePik',
-  id: 4
  }
-
 ]
 const Sliders = ({ laptops }) => {
  return (

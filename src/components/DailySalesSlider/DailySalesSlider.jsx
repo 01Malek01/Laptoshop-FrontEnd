@@ -25,7 +25,7 @@ function DailySalesSlider({ laptops }) {
   <div className="slider-container">
    <Slider {...settings}>
     {
-     laptops.map((laptop) => {
+     laptops?.map((laptop) => {
       return (
        <div key={laptop._id} className=" bg-[#19202F] sm:flex sm:justify-center md:w-96 md:p-2 h-[400px] ">
         <figure><Image src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>

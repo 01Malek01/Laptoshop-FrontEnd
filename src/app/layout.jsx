@@ -7,6 +7,9 @@ import { cookies } from "next/headers";
 import { JWTProvider, JwtContext } from "@/components/Provider/Provider";
 import { DropdownProvider } from "@/components/Provider/DropdownContext";
 import { QuantityProvider } from "@/components/Provider/QuantityContext";
+import { QueryProvider } from "@/components/Provider/QueryContext";
+import { Suspense } from "react";
+import Loading from "./loading";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,13 +25,17 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} container`}>
         <DropdownProvider>
-          <Navbar jwt={jwt} />
-          <JWTProvider jwt={jwt}>
-            <QuantityProvider>
-              {children}
-            </QuantityProvider>
-          </JWTProvider>
-          <Footer />
+          <QueryProvider>
+            <Navbar jwt={jwt} />
+            <JWTProvider jwt={jwt}>
+              <QuantityProvider>
+                <Suspense fallback={<Loading />}>
+                  {children}
+                </Suspense>
+              </QuantityProvider>
+            </JWTProvider>
+            <Footer />
+          </QueryProvider>
         </DropdownProvider>
       </body>
     </html>

@@ -1,14 +1,14 @@
 import React from 'react'
 import MenuBtn from '../MenuBtn/MenuBtn'
-const MobileMenus = () => {
+const MobileMenus = ({setOpen}) => {
  return (
   <div className={`flex flex-col justify-start container items-center gap-6  `}>
-   <MenuBtn label="Home" href="/" />
-   <MenuBtn label="About Us" href="/about" />
-   <MenuBtn label="Pages" href="/pages" />
-   <MenuBtn label="Feature" href="/feature" />
-   <MenuBtn label="Blog" href="/blog" />
-   <MenuBtn label="Contact Us" href="/contact" />
+   <MenuBtn onClick={() => setOpen(false)} label="Home" href="/" />
+   <MenuBtn onClick={() => setOpen(false)} label="About Us" href="/about" />
+   <MenuBtn onClick={() => setOpen(false)} label="Pages" href="/pages" />
+   <MenuBtn onClick={() => setOpen(false)} label="Feature" href="/feature" />
+   <MenuBtn onClick={() => setOpen(false)} label="Blog" href="/blog" />
+   <MenuBtn onClick={() => setOpen(false)} label="Contact Us" href="/contact" />
   </div>
  )
 }

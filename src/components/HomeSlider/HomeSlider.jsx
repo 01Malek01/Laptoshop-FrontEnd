@@ -30,7 +30,7 @@ function HomeSlider({ pics }) {
      pics && pics.map((pic) => {
       return (
        <div key={pic.id} className='w-[300px] h-[400px] relative '>
-        <Image className={styles.sliderImage} src={pic.src} alt={pic.alt} fill sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' priority />
+        <Image quality={100} className={styles.sliderImage} src={pic.src} alt={pic.alt} fill sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' priority />
        </div>
       )
      })
