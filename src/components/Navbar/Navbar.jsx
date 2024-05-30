@@ -9,7 +9,7 @@ import MobileMenus from '../MobileMenus/MobileMenus';
 import { FiMenu } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import Link from 'next/link';
-import SearchBox from '../SearchBox/searchBox';
+import SearchBox from '../SearchBox/SearchBox';
 
 const Navbar = ({ jwt }) => {
   const [open, setOpen] = useState(false);
