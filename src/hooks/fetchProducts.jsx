@@ -9,7 +9,7 @@ function useFetchProducts() {
  const [products, setProducts] = useState([]);
  const fetchProducts = useCallback(async () => {
 
-  const res = await axios.get(`http://localhost:5000/api/v1/laptops?search=${query && query}&${selectedValue === 'All Categories' ? '' : `brand=${selectedValue}`}&limit=100`);
+  const res = await axios.get(`${process.env.API_URL}/laptops?search=${query && query}&${selectedValue === 'All Categories' ? '' : `brand=${selectedValue}`}&limit=100`);
   setProducts(res.data.data.laptops);
 
  });

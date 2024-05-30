@@ -20,7 +20,7 @@ function Product() {
   useEffect(() => {
     const fetchLaptop = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/laptops/${params.id}`, {
+        const response = await axios.get(`${process.env.API_URL}/laptops/${params.id}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${jwt}`
@@ -48,7 +48,7 @@ function Product() {
 
   const handleAddToCart = useCallback(async () => {
     try {
-      await axios.post('http://localhost:5000/api/v1/cart', {
+      await axios.post(`${process.env.API_URL}/cart`, {
         productId: params.id,
         quantity
       }, {

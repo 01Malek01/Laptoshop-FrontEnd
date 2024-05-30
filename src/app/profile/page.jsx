@@ -24,7 +24,7 @@ function Profile() {
 
   const fetchUserData = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/users/me`, {
+      const res = await fetch(`${process.env.API_URL}/users/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/users/logout', {
+      const res = await fetch(`${process.env.API_URL}/users/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -71,7 +71,7 @@ function Profile() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
+      const res = await fetch(`${process.env.API_URL}/users/updateMe`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function Profile() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
+      const res = await fetch(`${process.env.API_URL}/users/updateMe`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ function Profile() {
   const handleEmailConfirmation = async (e) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:5000/api/v1/users/confirmMyEmail', {
+      await fetch(`${process.env.API_URL}/users/confirmMyEmail`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,14 +144,15 @@ function Profile() {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      await fetch('http://localhost:5000/api/v1/users/updatePhoto', {
+      await fetch(`${process.env.API_URL}/users/updatePhoto`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${jwt}`
         },
         body: formData
       });
-      window.location.href = "/profile";
+      window.location.refresh;
+
     } catch (error) {
       console.error('Error uploading file:', error);
     }

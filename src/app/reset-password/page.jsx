@@ -7,7 +7,7 @@ function ResetPass() {
   e.preventDefault()
   const email = e.target[0].value
   try {
-   fetch('http://localhost:5000/api/v1/users/resetPassword', {
+   fetch(`${process.env.API_URL}/users/resetPassword`, {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json'

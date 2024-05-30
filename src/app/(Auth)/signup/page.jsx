@@ -26,7 +26,7 @@ const Signup = () => {
   const onSubmit = async (data) => {
     console.log(data);
 
-    const res = await fetch('http://localhost:5000/api/v1/users/signup', {
+    const res = await fetch(`${process.env.API_URL}/users/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ const Navbar = ({ jwt }) => {
 
   useEffect(() => {
     if (jwt) {
-      fetch(`http://localhost:5000/api/v1/users/me`, {
+      fetch(`${process.env.API_URL}/users/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

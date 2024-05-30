@@ -16,7 +16,7 @@ function Page() {
         throw new Error('Item ID is required');
       }
 
-      const res = await fetch('http://localhost:5000/api/v1/cart', {
+      const res = await fetch(`${process.env.API_URL}/cart`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

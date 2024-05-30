@@ -9,7 +9,7 @@ const useCart = () => {
 
  const fetchCart = useCallback(async () => {
   try {
-   const res = await axios.get('http://localhost:5000/api/v1/cart', {
+   const res = await axios.get(`${process.env.API_URL}/cart`, {
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ${jwt}`, // Your access token

@@ -17,7 +17,7 @@ export default async function Home() {
   let laptops = [];
 
   try {
-    const res = await fetch('http://localhost:5000/api/v1/laptops?limit=5', {
+    const res = await fetch(`${process.env.API_URL}/laptops?limit=5`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

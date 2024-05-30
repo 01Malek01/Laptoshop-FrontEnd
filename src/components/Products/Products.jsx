@@ -38,7 +38,7 @@ const Products = ({ laptops, showMoreButton }) => {
     }
     else {
       const newLimit = limit + 5; // Increment limit
-      const res = await axios.get(`http://localhost:5000/api/v1/laptops?limit=${newLimit}`);
+      const res = await axios.get(`${process.env.API_URL}/laptops?limit=${newLimit}`);
       const newLaptops = res.data.data.laptops;
       console.log(newLaptops);
       setFetchedLaptops(prevLaptops => [...prevLaptops, ...newLaptops]); // Append new data
