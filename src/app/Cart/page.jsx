@@ -68,7 +68,7 @@ function Page() {
                       <td>{el.productId.model}</td>
                       <td>{el.productId.price}$</td>
                       <td className="flex items-center justify-center">
-                        <Image src={el.productId.image} width={100} height={100} />
+                        <Image alt ={el.productId.brand} src={el.productId.image} width={100} height={100} />
                       </td>
                       <td>{el.quantity}</td>
                       <td>

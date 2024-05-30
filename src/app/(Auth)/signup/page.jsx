@@ -46,9 +46,9 @@ const Signup = () => {
     console.log(res);
   };
 
-  const inputStyles =useMemo(() => "input input-bordered flex items-center gap-2");
-  const formContainerStyles = useMemo(() => "container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg");
-  const errorMessageStyles = useMemo(() => "text-red-500");
+  const inputStyles =useMemo(() => "input input-bordered flex items-center gap-2", []);
+  const formContainerStyles = useMemo(() => "container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg", []);
+  const errorMessageStyles = useMemo(() => "text-red-500", []);
 
   return (
     <form

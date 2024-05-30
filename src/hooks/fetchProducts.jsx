@@ -12,7 +12,7 @@ function useFetchProducts() {
   const res = await axios.get(`${process.env.API_URL}/laptops?search=${query && query}&${selectedValue === 'All Categories' ? '' : `brand=${selectedValue}`}&limit=100`);
   setProducts(res.data.data.laptops);
 
- });
+ }, [selectedValue, query]);
  useEffect(() => {
   fetchProducts();
  }, [selectedValue, query]);

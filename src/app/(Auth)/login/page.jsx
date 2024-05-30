@@ -61,7 +61,7 @@ const Login = () => {
         {errorMessage && <div className={errorMessageStyles}>{errorMessage}</div>}
         <button className="btn btn-primary mt-2">Login</button>
         <div className="text-center text-black">
-          <p>Don't have an account? <Link className='text-blue-500 underline' href="/signup">Register</Link></p>
+          <p>Don&apos;t have an account? <Link className='text-blue-500 underline' href="/signup">Register</Link></p>
         </div>
         <div className="text-sm md:text-lg">
           Forgot Password? <Link className='text-blue-500 underline' href="/reset-password">Reset Password</Link>
