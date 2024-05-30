@@ -1,37 +1,65 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import styles from './products.module.css';
 import Image from 'next/image';
 import axios from 'axios';
 import Link from 'next/link';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Products = ({ laptops, showMoreButton }) => {
   const [limit, setLimit] = useState(5); // Initial data limit
   const [fetchedLaptops, setFetchedLaptops] = useState(laptops); // Store fetched data
+  const [filter, setFilter] = useState({ price: '999999', ramSize: '' }); // Filter state
+  const [filteredLaptops, setFilteredLaptops] = useState([]); // Filtered laptops state
+
   useEffect(() => {
     setFetchedLaptops(laptops); // Set initial data
   }, [laptops]); // Re-run on initial render and new `laptops` prop
+
+  const applyFilter = () => {
+    const laptops = fetchedLaptops.filter(laptop =>
+      laptop.price <= filter.price &&
+      laptop.ram >= filter.ramSize
+    );
+
+    if (laptops.length === 0) {
+      toast.error('No laptops with the applied filters');
+    } else {
+      setFilteredLaptops(laptops);
+    }
+
+    console.log(filter);
+  };
 
   const handleShowMoreClick = async () => {
     if (fetchedLaptops.length >= 22) {
       return alert('No more laptops');
     }
     else {
-
       const newLimit = limit + 5; // Increment limit
       const res = await axios.get(`http://localhost:5000/api/v1/laptops?limit=${newLimit}`);
-      const newLaptops = res.data.data.laptops
+      const newLaptops = res.data.data.laptops;
       console.log(newLaptops);
       setFetchedLaptops(prevLaptops => [...prevLaptops, ...newLaptops]); // Append new data
       setLimit(newLimit); // Update internal limit state for tracking
-
     }
   };
 
+  const laptopsToDisplay = filteredLaptops.length > 0 ? filteredLaptops : fetchedLaptops;
+
   return (
-    <div className={`container ${styles.home} `}>
+    <div className={`container`}>
+      <ToastContainer />
+      <div className={`container flex flex-wrap justify-center items-center gap-4 mb-5 pt-5`}>
+        <input type="number" placeholder="Max Price" onChange={e => setFilter({ ...filter, price: e.target.value })} className='border p-2 rounded' />
+        <input type="number" placeholder="Min RAM Size" onChange={e => setFilter({ ...filter, ramSize: e.target.value })} className='border p-2 rounded' />
+        <button onClick={applyFilter} className='btn bg-[#19202F] hover:bg-slate-300 hover:text-black'>Apply Filter</button>
+      </div>
+
       <div className={`${styles.products} bg-[#ffffff] flex p-4 justify-center items-center gap-4 `}>
-        {fetchedLaptops?.map((laptop) => (
-          <div key={laptop._id} className=" bg-slate-100 sm:w-96 p-2 max-h-[700x] border m-auto  ">
+        {laptopsToDisplay?.map((laptop) => (
+          <div key={laptop._id} className=" bg-slate-100 sm:w-96 p-2 max-h-[700x] border m-auto  ">
             <figure className=""><Image className="w-full max-h-[250px]" src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
             <div className="card-body text-slate-500">
               <h2 className="card-title">

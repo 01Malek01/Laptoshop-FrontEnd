@@ -66,7 +66,7 @@ const Navbar = ({ jwt }) => {
       <div className={`${styles.mobileMenuBtn} md:hidden float-right p-2 m-2 bg-[#19202f]`} onClick={toggleMenu}>
         {open ? <IoMdClose size={30} className={styles.icon} /> : <FiMenu size={30} className={styles.icon} />}
       </div>
-      <div className={`${styles.mobileMenusContainer} container w-[100%] h-[100vh] z-10 bg-slate-500 flex items-center ${open ? 'flex' : 'hidden'}`}>
+      <div className={`${styles.mobileMenusContainer} container w-[100%] h-[80vh] z-10 bg-slate-500 flex items-center ${open ? 'flex' : 'hidden'}`}>
         <MobileMenus setOpen={setOpen} />
       </div>
     </>

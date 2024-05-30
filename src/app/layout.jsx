@@ -10,6 +10,7 @@ import { QuantityProvider } from "@/components/Provider/QuantityContext";
 import { QueryProvider } from "@/components/Provider/QueryContext";
 import { Suspense } from "react";
 import Loading from "./loading";
+import SortProvider from "@/components/Provider/SortContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -29,9 +30,11 @@ export default function RootLayout({ children }) {
             <Navbar jwt={jwt} />
             <JWTProvider jwt={jwt}>
               <QuantityProvider>
-                <Suspense fallback={<Loading />}>
-                  {children}
-                </Suspense>
+                <SortProvider>
+                  <Suspense fallback={<Loading />}>
+                    {children}
+                  </Suspense>
+                </SortProvider>
               </QuantityProvider>
             </JWTProvider>
             <Footer />

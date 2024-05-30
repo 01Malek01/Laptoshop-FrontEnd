@@ -13,9 +13,9 @@ import "react-toastify/dist/ReactToastify.css";
 function Product() {
   const [laptop, setLaptop] = useState({});
   const [authorized, setAuthorized] = useState(false);
-  const params = useParams();
   const jwt = useContext(JwtContext);
   const { quantity } = useQuantityContext();
+  const params = useParams();
 
   useEffect(() => {
     const fetchLaptop = async () => {

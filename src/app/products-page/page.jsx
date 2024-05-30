@@ -7,6 +7,7 @@ import Loading from '../loading';
 function ProductsPage() {
   const laptops = useFetchProducts();
   return (
+    
     <Suspense fallback={<Loading />}>
       <div className='container bg-white'>
         {

@@ -1,7 +1,7 @@
-'use client'
-import { useCallback, useContext, useEffect, useState } from "react";
+'use client';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { JwtContext } from "@/components/Provider/Provider";
+import { JwtContext } from '@/components/Provider/Provider';
 
 const useCart = () => {
  const [cart, setCart] = useState({});
@@ -12,31 +12,29 @@ const useCart = () => {
    const res = await axios.get('http://localhost:5000/api/v1/cart', {
     headers: {
      'Content-Type': 'application/json',
-     'Authorization': `Bearer ${jwt}` // Your access token
-    }
+     'Authorization': `Bearer ${jwt}`, // Your access token
+    },
    });
-   // return res.data?.data;
    return {
     products: res.data.products,
-    other: res.data
-   }
+    other: res.data,
+   };
   } catch (error) {
    console.error('Error:', error);
-   return [];
+   return {};
   }
  }, [jwt]);
 
+ const refetch = async () => {
+  const fetchedCart = await fetchCart();
+  setCart(fetchedCart);
+ };
+
  useEffect(() => {
-  const fetchData = async () => {
-   const fetchedCart = await fetchCart();
-   setCart(fetchedCart);
-  };
+  refetch();
+ }, [jwt, fetchCart]);
 
-  fetchData();
- }, [jwt]);
-
- return cart;
+ return { cart, refetch };
 };
-
 
 export default useCart;

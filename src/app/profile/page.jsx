@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { JwtContext } from '@/components/Provider/Provider';
 import Image from 'next/image';
@@ -65,7 +65,10 @@ function Profile() {
 
   const handleSaveName = async (e) => {
     e.preventDefault();
-    if (!newName) return;
+    if (!newName || newName.length < 3 || newName.length > 10) {
+      setError('Name must be between 3 and 10 characters');
+      return;
+    }
 
     try {
       const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
@@ -81,14 +84,20 @@ function Profile() {
       setUser(updatedUser.data?.user);
       setNewName(updatedUser.data?.user.name);
       setEditName(false);
+      setError(null);
     } catch (error) {
       console.error('Error updating name:', error);
+      setError('Error updating name');
     }
   };
 
   const handleSaveEmail = async (e) => {
     e.preventDefault();
-    if (!newEmail) return;
+    const emailPattern = /^\S+@\S+\.\S+$/;
+    if (!newEmail || !emailPattern.test(newEmail)) {
+      setError('Please enter a valid email');
+      return;
+    }
 
     try {
       const res = await fetch('http://localhost:5000/api/v1/users/updateMe', {
@@ -104,8 +113,10 @@ function Profile() {
       setUser(updatedUser.data?.user);
       setNewEmail(updatedUser.data?.user.email);
       setEditEmail(false);
+      setError(null);
     } catch (error) {
       console.error('Error updating email:', error);
+      setError('Error updating email');
     }
   };
 
@@ -172,12 +183,15 @@ function Profile() {
                     value={newName}
                     placeholder='Enter your new username'
                     onChange={(e) => setNewName(e.target.value)}
+                    required
+                    minLength={3}
+                    maxLength={10}
                   />
                 </label>
-                <button type="button" className="btn btn-sm ml-2 h-[80%]" onClick={handleSaveName}>
+                <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveName}>
                   Save Name
                 </button>
-                <button type="button" className="btn btn-sm ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
               </>
             ) : (
               <label className="input input-bordered flex items-center gap-2">
@@ -187,7 +201,7 @@ function Profile() {
                   value={user?.name}
                   disabled={editName}
                 />
-                <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={() => setEditName(true)}>
+                <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditName(true)}>
                   Edit Name
                 </button>
               </label>
@@ -203,11 +217,13 @@ function Profile() {
                   placeholder="Enter your new email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
+                  required
+                  pattern="^\S+@\S+\.\S+$"
                 />
-                <button type="button" className="btn btn-sm ml-2 h-[80%]" onClick={handleSaveEmail}>
+                <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveEmail}>
                   Save Email
                 </button>
-                <button type="button" className="btn btn-sm ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
               </>
             ) : (
               <label className="input input-bordered flex items-center gap-2">
@@ -217,15 +233,16 @@ function Profile() {
                   value={user?.email}
                   disabled={editEmail}
                 />
-                <button className="bg-white text-slate-500 px-1 hover:bg-slate-200 h-[80%] rounded-lg text-sm" onClick={() => setEditEmail(true)}>
+                <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditEmail(true)}>
                   Edit Email
                 </button>
               </label>
             )}
+            {error && <span className="text-red-500">{error}</span>}
           </div>
         </div>
       </div>
-      {!user.emailConfirmed && (
+      {!user?.emailConfirmed && (
         <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
       )}
       <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
