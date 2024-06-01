@@ -29,6 +29,11 @@ const Navbar = ({ jwt }) => {
         .catch(err => console.error('Error fetching user data:', err));
     }
   }, [jwt]);
+  useEffect(() => {
+    console.log('====================================');
+    console.log(jwt);
+    console.log('====================================');
+  })
 
   const toggleMenu = useCallback(() => {
     setOpen(prevOpen => !prevOpen);
