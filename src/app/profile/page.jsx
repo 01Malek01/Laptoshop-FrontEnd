@@ -15,8 +15,6 @@ function Profile() {
   const jwt = localStorage&&localStorage.getItem('jwt');
   useEffect(() => {
       fetchUserData();
-      console.log(jwt);
-      console.log('from local storage',localStorage.getItem('jwt'));
     
   }, [jwt]);
 
