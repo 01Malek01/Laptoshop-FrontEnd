@@ -34,6 +34,10 @@ const Login = () => {
         return;
       }
 
+      const data = await res.json(); // Parse the response body as JSON
+      const token = data.token; // Access the token from the parsed data
+      localStorage.setItem('jwt', token); // Store the token in local storage
+      console.log(localStorage.getItem('jwt'));
       router.push('/');
       router.refresh();
     } catch (error) {
@@ -41,6 +45,7 @@ const Login = () => {
       setErrorMessage('An unexpected error occurred. Please try again later.');
     }
   };
+
 
   const formStyles = useMemo(() => "container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg", []);
   const inputStyles = useMemo(() => "input input-bordered flex items-center gap-2", []);

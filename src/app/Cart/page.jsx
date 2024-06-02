@@ -1,12 +1,10 @@
 'use client';
-import { useContext } from 'react';
 import useCart from '@/hooks/fetchCart';
 import Image from 'next/image';
-import { JwtContext } from '@/components/Provider/Provider';
 import Link from 'next/link';
 
 function Page() {
-  const jwt = useContext(JwtContext);
+  const jwt = localStorage&&localStorage.getItem('jwt');
   const { cart, refetch } = useCart();
   const items = cart.other?.data?.items;
 
@@ -68,7 +66,7 @@ function Page() {
                       <td>{el.productId.model}</td>
                       <td>{el.productId.price}$</td>
                       <td className="flex items-center justify-center">
-                        <Image alt ={el.productId.brand} src={el.productId.image} width={100} height={100} />
+                        <Image alt={el.productId.brand} src={el.productId.image} width={100} height={100} />
                       </td>
                       <td>{el.quantity}</td>
                       <td>

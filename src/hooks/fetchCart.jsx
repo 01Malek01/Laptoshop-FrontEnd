@@ -1,11 +1,10 @@
 'use client';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-import { JwtContext } from '@/components/Provider/Provider';
 
 const useCart = () => {
  const [cart, setCart] = useState({});
- const jwt = useContext(JwtContext);
+ const jwt = localStorage&&localStorage.getItem('jwt');
 
  const fetchCart = useCallback(async () => {
   try {

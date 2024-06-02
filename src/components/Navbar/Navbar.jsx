@@ -11,10 +11,10 @@ import { IoMdClose } from "react-icons/io";
 import Link from 'next/link';
 import SearchBox from '../SearchBox/SearchBox';
 
-const Navbar = ({ jwt }) => {
+const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-
+  const jwt = localStorage&&localStorage.getItem('jwt');
   useEffect(() => {
     if (jwt) {
       fetch(`${process.env.API_URL}/users/me`, {
@@ -29,11 +29,7 @@ const Navbar = ({ jwt }) => {
         .catch(err => console.error('Error fetching user data:', err));
     }
   }, [jwt]);
-  useEffect(() => {
-    console.log('====================================');
-    console.log(jwt);
-    console.log('====================================');
-  })
+
 
   const toggleMenu = useCallback(() => {
     setOpen(prevOpen => !prevOpen);

@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { JwtContext } from '@/components/Provider/Provider';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Profile() {
   const [user, setUser] = useState({});
@@ -13,13 +12,12 @@ function Profile() {
   const [newEmail, setNewEmail] = useState('');
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
-  const router = useRouter();
-  const jwt = useContext(JwtContext);
-
+  const jwt = localStorage&&localStorage.getItem('jwt');
   useEffect(() => {
-    if (jwt) {
       fetchUserData();
-    }
+      console.log(jwt);
+      console.log('from local storage',localStorage.getItem('jwt'));
+    
   }, [jwt]);
 
   const fetchUserData = async () => {
@@ -42,26 +40,34 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(`${process.env.API_URL}/users/logout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      // const res = await fetch(`${process.env.API_URL}/users/logout`, {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
 
-      if (!res.ok) {
-        throw new Error('Failed to logout');
-      }
+      // if (!res.ok) {
+      //   throw new Error('Failed to logout');
+      // }
+
+      // Remove JWT from localStorage
+      localStorage.removeItem('jwt');
 
       console.log('Logged out successfully');
-      setUser({});
+
+      // Clear user state
+      setUser(null);
+
+      // Redirect to login page
       window.location.href = "/login";
     } catch (error) {
       console.error('Error logging out:', error);
       setError('Logout failed. Please try again.');
     }
   };
+
 
   const handleSaveName = async (e) => {
     e.preventDefault();
@@ -157,98 +163,113 @@ function Profile() {
       console.error('Error uploading file:', error);
     }
   };
-
   return (
-    <form className="container min-w-[200px] md:max-w-[80%] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
-      <div className='flex justify-start items-start p-5'>
-        {user && <p className='text-2xl text-black'>Hello, {user.name}</p>}
-      </div>
-      <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
-        <div className="flex justify-center items-center flex-col gap-5">
-          <Image src={user?.image} alt="profile" width={150} height={150} />
-          <div className="flex justify-center items-center flex-col mx-auto">
-            <span className="text-black p-4">Upload A New Profile Photo 👇</span>
-            <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
-            <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleFileUpload}>Upload</button>
+    <div>
+      {!jwt ? (
+        <div className="container min-w-[200px] md:max-w-[80%] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
+          <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
+            <div className="flex justify-center items-center flex-col mx-auto">
+              <span className="text-black p-4">Please Login</span>
+              <Link href="/login">
+                <button className="btn btn-primary w-[150px] mx-auto mt-3">Login</button>
+              </Link>
+            </div>
           </div>
         </div>
-        <div>
-          <div className="flex justify-center items-center flex-wrap">
-            <span className="text-black p-4">Name</span>
-            {editName ? (
-              <>
-                <label className="input input-bordered flex items-center gap-2">
-                  <input
-                    type="text"
-                    className="grow"
-                    value={newName}
-                    placeholder='Enter your new username'
-                    onChange={(e) => setNewName(e.target.value)}
-                    required
-                    minLength={3}
-                    maxLength={10}
-                  />
-                </label>
-                <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveName}>
-                  Save Name
-                </button>
-                <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
-              </>
-            ) : (
-              <label className="input input-bordered flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow"
-                  value={user?.name}
-                  disabled={editName}
-                />
-                <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditName(true)}>
-                  Edit Name
-                </button>
-              </label>
-            )}
+      ) : (
+        <form className="container min-w-[200px] md:max-w-[80%] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
+          <div className='flex justify-start items-start p-5'>
+            {user && <p className='text-2xl text-black'>Hello, {user.name}</p>}
           </div>
-          <div className="flex justify-center items-center flex-wrap">
-            <span className="text-black p-4">Email</span>
-            {editEmail ? (
-              <>
-                <input
-                  type="email"
-                  className="grow input"
-                  placeholder="Enter your new email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  required
-                  pattern="^\S+@\S+\.\S+$"
-                />
-                <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveEmail}>
-                  Save Email
-                </button>
-                <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
-              </>
-            ) : (
-              <label className="input input-bordered flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow"
-                  value={user?.email}
-                  disabled={editEmail}
-                />
-                <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditEmail(true)}>
-                  Edit Email
-                </button>
-              </label>
-            )}
-            {error && <span className="text-red-500">{error}</span>}
+          <div className="flex justify-center items-center container flex-col md:flex-row gap-20">
+            <div className="flex justify-center items-center flex-col gap-5">
+              <Image src={user?.image} alt="profile" width={150} height={150} />
+              <div className="flex justify-center items-center flex-col mx-auto">
+                <span className="text-black p-4">Upload A New Profile Photo 👇</span>
+                <input onChange={handleFileChange} type="file" className="file-input file-input-bordered w-full max-w-xs" />
+                <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleFileUpload}>Upload</button>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-center items-center flex-wrap">
+                <span className="text-black p-4">Name</span>
+                {editName ? (
+                  <>
+                    <label className="input input-bordered flex items-center gap-2">
+                      <input
+                        type="text"
+                        className="grow"
+                        value={newName}
+                        placeholder='Enter your new username'
+                        onChange={(e) => setNewName(e.target.value)}
+                        required
+                        minLength={3}
+                        maxLength={10}
+                      />
+                    </label>
+                    <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveName}>
+                      Save Name
+                    </button>
+                    <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
+                  </>
+                ) : (
+                  <label className="input input-bordered flex items-center gap-2">
+                    <input
+                      type="text"
+                      className="grow"
+                      value={user?.name}
+                      disabled={editName}
+                    />
+                    <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditName(true)}>
+                      Edit Name
+                    </button>
+                  </label>
+                )}
+              </div>
+              <div className="flex justify-center items-center flex-wrap">
+                <span className="text-black p-4">Email</span>
+                {editEmail ? (
+                  <>
+                    <input
+                      type="email"
+                      className="grow input"
+                      placeholder="Enter your new email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      required
+                      pattern="^\S+@\S+\.\S+$"
+                    />
+                    <button type="button" className="btn btn-primary ml-2 h-[80%]" onClick={handleSaveEmail}>
+                      Save Email
+                    </button>
+                    <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
+                  </>
+                ) : (
+                  <label className="input input-bordered flex items-center gap-2">
+                    <input
+                      type="text"
+                      className="grow"
+                      value={user?.email}
+                      disabled={editEmail}
+                    />
+                    <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditEmail(true)}>
+                      Edit Email
+                    </button>
+                  </label>
+                )}
+                {error && <span className="text-red-500">{error}</span>}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {!user?.emailConfirmed && (
-        <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
+          {!user?.emailConfirmed && (
+            <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleEmailConfirmation}>Confirm Email</button>
+          )}
+          <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
+        </form>
       )}
-      <button className="btn btn-primary w-[150px] mx-auto mt-3" onClick={handleLogout}>Logout</button>
-    </form>
+    </div>
   );
+
 }
 
 export default Profile;

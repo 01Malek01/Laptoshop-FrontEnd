@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { JwtContext } from '@/components/Provider/Provider';
 import Image from 'next/image';
 import Link from 'next/link';
 import QuantityInput from '@/components/quantityInput/QuantityInput';
@@ -13,9 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 function Product() {
   const [laptop, setLaptop] = useState({});
   const [authorized, setAuthorized] = useState(false);
-  const jwt = useContext(JwtContext);
   const { quantity } = useQuantityContext();
   const params = useParams();
+  const jwt = localStorage&&localStorage.getItem('jwt');
 
   useEffect(() => {
     const fetchLaptop = async () => {
