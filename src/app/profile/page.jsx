@@ -12,7 +12,7 @@ function Profile() {
   const [newEmail, setNewEmail] = useState('');
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
-  const jwt = localStorage&&localStorage.getItem('jwt');
+  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
   useEffect(() => {
       fetchUserData();
     

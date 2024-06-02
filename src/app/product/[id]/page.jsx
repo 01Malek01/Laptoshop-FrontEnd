@@ -14,7 +14,7 @@ function Product() {
   const [authorized, setAuthorized] = useState(false);
   const { quantity } = useQuantityContext();
   const params = useParams();
-  const jwt = localStorage&&localStorage.getItem('jwt');
+  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
 
   useEffect(() => {
     const fetchLaptop = async () => {

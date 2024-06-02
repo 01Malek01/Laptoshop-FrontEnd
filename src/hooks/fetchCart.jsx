@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const useCart = () => {
  const [cart, setCart] = useState({});
- const jwt = localStorage&&localStorage.getItem('jwt');
+ const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
 
  const fetchCart = useCallback(async () => {
   try {
