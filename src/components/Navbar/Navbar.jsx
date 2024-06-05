@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useCallback, useState } from 'react';
 import styles from './navbar.module.css';
 import Image from 'next/image';
@@ -14,22 +14,29 @@ import SearchBox from '../SearchBox/SearchBox';
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-  const jwt = localStorage&&localStorage.getItem('jwt');
+  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
+
   useEffect(() => {
     if (jwt) {
-      fetch(`${process.env.API_URL}/users/me`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt.value}` // Your access token
-        }
-      })
-        .then(res => res.json())
-        .then(res => setUser(res.data?.user))
-        .catch(err => console.error('Error fetching user data:', err));
+      fetchUserData();
     }
   }, [jwt]);
 
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`${process.env.API_URL}/users/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}` // Your access token
+        }
+      });
+      const data = await response.json();
+      setUser(data.data?.user);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const toggleMenu = useCallback(() => {
     setOpen(prevOpen => !prevOpen);
@@ -47,7 +54,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-row gap-4 my-3 md:my-0">
             <div className={styles.profile}>
-              <Link href={jwt && jwt.value !== 'loggedout' ? '/profile' : '/login'}>
+              <Link href={jwt && jwt !== 'loggedout' ? '/profile' : '/login'}>
                 {user?.image ? (
                   <Image src={user.image} alt="profile" width={30} height={30} className={`${styles.icon} rounded-full`} />
                 ) : (

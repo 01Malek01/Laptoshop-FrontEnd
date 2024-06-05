@@ -19,7 +19,7 @@ function Profile() {
       const token = localStorage.getItem('jwt');
       setJwt(token);
     }
-  }, []);
+  }, [fetchUserData]);
 
   useEffect(() => {
     if (jwt) {
