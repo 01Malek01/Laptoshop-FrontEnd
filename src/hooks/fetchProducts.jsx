@@ -15,7 +15,7 @@ function useFetchProducts() {
  }, [selectedValue, query]);
  useEffect(() => {
   fetchProducts();
- }, [selectedValue, query, fetchProducts]);
+ }, [selectedValue, query]);
 
 
  return products;

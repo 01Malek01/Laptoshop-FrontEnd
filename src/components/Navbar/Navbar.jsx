@@ -14,29 +14,29 @@ import SearchBox from '../SearchBox/SearchBox';
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
+  const [jwt, setJwt] = useState('');
+
+  useEffect(() => {
+    const storedJwt = localStorage.getItem('jwt');
+    if (storedJwt) {
+      setJwt(storedJwt);
+    }
+  }, []);
 
   useEffect(() => {
     if (jwt) {
-      fetchUserData();
-    }
-  }, [jwt]);
-
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(`${process.env.API_URL}/users/me`, {
+      fetch(`${process.env.API_URL}/users/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${jwt}` // Your access token
         }
-      });
-      const data = await response.json();
-      setUser(data.data?.user);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
+      })
+        .then(res => res.json())
+        .then(res => setUser(res.data?.user))
+        .catch(err => console.error('Error fetching user data:', err));
     }
-  };
+  }, [jwt]);
 
   const toggleMenu = useCallback(() => {
     setOpen(prevOpen => !prevOpen);
@@ -54,7 +54,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-row gap-4 my-3 md:my-0">
             <div className={styles.profile}>
-              <Link href={jwt && jwt !== 'loggedout' ? '/profile' : '/login'}>
+              <Link href={jwt && jwt.value !== 'loggedout' ? '/profile' : '/login'}>
                 {user?.image ? (
                   <Image src={user.image} alt="profile" width={30} height={30} className={`${styles.icon} rounded-full`} />
                 ) : (

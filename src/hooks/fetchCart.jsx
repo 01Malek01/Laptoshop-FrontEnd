@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -6,9 +7,9 @@ const useCart = () => {
  const [jwt, setJwt] = useState('');
 
  useEffect(() => {
-  if (typeof window !== 'undefined') {
-   const token = localStorage.getItem('jwt');
-   setJwt(token);
+  const storedJwt = localStorage.getItem('jwt');
+  if (storedJwt) {
+   setJwt(storedJwt);
   }
  }, []);
 
@@ -17,7 +18,7 @@ const useCart = () => {
    const res = await axios.get(`${process.env.API_URL}/cart`, {
     headers: {
      'Content-Type': 'application/json',
-     'Authorization': `Bearer ${jwt}`,
+     'Authorization': `Bearer ${jwt}`, // Your access token
     },
    });
    return {

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 
 function ResetPass() {
 
- const handleSubmit = (e) => {
+ const handleSumbit = (e) => {
   e.preventDefault()
   const email = e.target[0].value
   try {

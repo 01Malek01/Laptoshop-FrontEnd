@@ -6,10 +6,13 @@ import { FaShippingFast } from "react-icons/fa";
 import { MdAssignmentReturn } from "react-icons/md";
 import Card2 from '@/components/Card 2/Card2';
 import Products from '@/components/Products/Products';
+import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import Loading from './loading';
 
 export default async function Home() {
+  const cookieStore = cookies();
+  const jwt = cookieStore.get('jwt');
 
   let laptops = [];
 
