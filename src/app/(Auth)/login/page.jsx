@@ -1,5 +1,6 @@
-'use client'
-import React, { useState, useMemo } from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -36,8 +37,11 @@ const Login = () => {
 
       const data = await res.json(); // Parse the response body as JSON
       const token = data.token; // Access the token from the parsed data
-      localStorage.setItem('jwt', token); // Store the token in local storage
-      console.log(localStorage.getItem('jwt'));
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('jwt', token); // Store the token in local storage
+      }
+
       router.push('/');
       router.refresh();
     } catch (error) {
@@ -46,24 +50,19 @@ const Login = () => {
     }
   };
 
-
-  const formStyles = useMemo(() => "container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg", []);
-  const inputStyles = useMemo(() => "input input-bordered flex items-center gap-2", []);
-  const errorMessageStyles = useMemo(() => "text-red-500 text-center mt-2", []);
-
   return (
     <>
-      <form onSubmit={handleSubmit} className={formStyles}>
+      <form onSubmit={handleSubmit} className="container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg">
         Email
-        <label className={inputStyles}>
+        <label className="input input-bordered flex items-center gap-2">
           <EmailIcon />
           <input type="text" name="email" className="grow" placeholder="Email" />
         </label>
         Password
-        <label className={inputStyles}>
+        <label className="input input-bordered flex items-center gap-2">
           <input type="password" name="password" className="grow" placeholder="Password" />
         </label>
-        {errorMessage && <div className={errorMessageStyles}>{errorMessage}</div>}
+        {errorMessage && <div className="text-red-500 text-center mt-2">{errorMessage}</div>}
         <button className="btn btn-primary mt-2">Login</button>
         <div className="text-center text-black">
           <p>Don&apos;t have an account? <Link className='text-blue-500 underline' href="/signup">Register</Link></p>

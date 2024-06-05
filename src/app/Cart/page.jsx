@@ -1,10 +1,20 @@
 'use client';
+
+import React, { useState, useEffect } from 'react';
 import useCart from '@/hooks/fetchCart';
 import Image from 'next/image';
 import Link from 'next/link';
 
 function Page() {
-  const jwt = localStorage&&localStorage.getItem('jwt');
+  const [jwt, setJwt] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('jwt');
+      setJwt(token);
+    }
+  }, []);
+
   const { cart, refetch } = useCart();
   const items = cart.other?.data?.items;
 
@@ -98,10 +108,8 @@ function Page() {
                 </dialog>
               </div>
             </>
-
           )
         }
-
       </div>
     </div>
   );

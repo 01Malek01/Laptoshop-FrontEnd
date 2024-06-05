@@ -12,10 +12,19 @@ function Profile() {
   const [newEmail, setNewEmail] = useState('');
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
-  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
+  const [jwt, setJwt] = useState('');
+
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('jwt');
+      setJwt(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (jwt) {
       fetchUserData();
-    
+    }
   }, [jwt]);
 
   const fetchUserData = async () => {
@@ -38,34 +47,15 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      // const res = await fetch(`${process.env.API_URL}/users/logout`, {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
-
-      // if (!res.ok) {
-      //   throw new Error('Failed to logout');
-      // }
-
-      // Remove JWT from localStorage
       localStorage.removeItem('jwt');
-
       console.log('Logged out successfully');
-
-      // Clear user state
       setUser(null);
-
-      // Redirect to login page
       window.location.href = "/login";
     } catch (error) {
       console.error('Error logging out:', error);
       setError('Logout failed. Please try again.');
     }
   };
-
 
   const handleSaveName = async (e) => {
     e.preventDefault();
@@ -155,12 +145,12 @@ function Profile() {
         },
         body: formData
       });
-      window.location.refresh;
-
+      window.location.reload();
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   };
+
   return (
     <div>
       {!jwt ? (
@@ -267,7 +257,6 @@ function Profile() {
       )}
     </div>
   );
-
 }
 
 export default Profile;
