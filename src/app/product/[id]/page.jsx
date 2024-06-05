@@ -1,6 +1,6 @@
-'use client';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+'use client'
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/router';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +14,14 @@ function Product() {
   const [authorized, setAuthorized] = useState(false);
   const { quantity } = useQuantityContext();
   const params = useParams();
-  const jwt = typeof window !== 'undefined' && localStorage.getItem('jwt');
+  const [jwt, setJwt] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('jwt');
+      setJwt(token);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLaptop = async () => {
@@ -36,7 +43,9 @@ function Product() {
       }
     };
 
-    fetchLaptop();
+    if (jwt) {
+      fetchLaptop();
+    }
   }, [params.id, jwt]);
 
   const notify = useCallback(() => {
