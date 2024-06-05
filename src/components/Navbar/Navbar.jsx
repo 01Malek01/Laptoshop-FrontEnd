@@ -54,7 +54,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-row gap-4 my-3 md:my-0">
             <div className={styles.profile}>
-              <Link href={jwt && jwt.value !== 'loggedout' ? '/profile' : '/login'}>
+              <Link href={jwt ?  '/profile' : '/login'}>
                 {user?.image ? (
                   <Image src={user.image} alt="profile" width={30} height={30} className={`${styles.icon} rounded-full`} />
                 ) : (
