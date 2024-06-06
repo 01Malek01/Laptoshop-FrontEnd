@@ -1,20 +1,21 @@
 'use client';
-import React, { useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import useCart from '@/hooks/fetchCart';
 import Image from 'next/image';
 import Link from 'next/link';
 
 function Page() {
-  const [jwt, setJwt] = React.useState('');
+  const [jwt, setJwt] = useState('');
 
   useEffect(() => {
-    const storedJwt = localStorage.getItem('jwt');
-    if (storedJwt) {
-      setJwt(storedJwt);
+    if (typeof window !== 'undefined') {
+      const token = typeof window !== 'undefined' && localStorage.getItem('jwt');
+      setJwt(token);
     }
   }, []);
 
-  const { cart, refetch } = useCart(jwt);
+  const { cart, refetch } = useCart();
   const items = cart.other?.data?.items;
 
   const removeItem = async (id) => {
@@ -107,10 +108,8 @@ function Page() {
                 </dialog>
               </div>
             </>
-
           )
         }
-
       </div>
     </div>
   );

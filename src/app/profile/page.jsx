@@ -15,9 +15,9 @@ function Profile() {
   const [jwt, setJwt] = useState('');
 
   useEffect(() => {
-    const storedJwt = localStorage.getItem('jwt');
-    if (storedJwt) {
-      setJwt(storedJwt);
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('jwt');
+      setJwt(token);
     }
   }, []);
 
@@ -33,8 +33,8 @@ function Profile() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`,
-        },
+          'Authorization': `Bearer ${jwt}`
+        }
       });
       const data = await res.json();
       setUser(data.data?.user);
@@ -47,13 +47,10 @@ function Profile() {
 
   const handleLogout = async () => {
     try {
-      // Remove JWT from localStorage
       localStorage.removeItem('jwt');
       console.log('Logged out successfully');
-      // Clear user state
       setUser(null);
-      // Redirect to login page
-      window.location.href = '/login';
+      window.location.href = "/login";
     } catch (error) {
       console.error('Error logging out:', error);
       setError('Logout failed. Please try again.');
@@ -124,7 +121,7 @@ function Profile() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`,
+          'Authorization': `Bearer ${jwt}`
         },
         credentials: 'include',
       });
@@ -138,22 +135,22 @@ function Profile() {
   };
 
   const handleFileUpload = async (e) => {
-    e.preventDefault();
     const formData = new FormData();
     formData.append('image', file);
     try {
       await fetch(`${process.env.API_URL}/users/updatePhoto`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          'Authorization': `Bearer ${jwt}`
         },
-        body: formData,
+        body: formData
       });
       window.location.reload();
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   };
+
   return (
     <div>
       {!jwt ? (
@@ -260,7 +257,6 @@ function Profile() {
       )}
     </div>
   );
-
 }
 
 export default Profile;

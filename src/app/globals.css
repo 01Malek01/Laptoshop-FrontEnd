@@ -9,7 +9,7 @@
 }*/
 
 /* Chrome, Edge and Safari */
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   height: 10px;
   width: 10px;
 }
@@ -37,10 +37,11 @@
 
 *::-webkit-scrollbar-thumb:active {
   background-color: #ffff;
-}
+} */
 
 body {
   background: #66bafe;
   height: 100vh;
-  padding: 0 30px;
+  padding: 0 10px;
+  max-width: fit-content;
 }

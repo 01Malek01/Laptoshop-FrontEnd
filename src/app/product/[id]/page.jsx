@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
@@ -17,16 +17,19 @@ function Product() {
   const [jwt, setJwt] = useState('');
 
   useEffect(() => {
-    // This code will run only on the client side
-    const token = localStorage.getItem('jwt');
-    setJwt(token);
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('jwt');
+      setJwt(token);
+    }
+  }, []);
 
+  useEffect(() => {
     const fetchLaptop = async () => {
       try {
         const response = await axios.get(`${process.env.API_URL}/laptops/${params.id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${jwt}`
           }
         });
 
@@ -40,11 +43,13 @@ function Product() {
       }
     };
 
-    fetchLaptop();
-  }, [params.id]);
+    if (jwt) {
+      fetchLaptop();
+    }
+  }, [params.id, jwt]);
 
   const notify = useCallback(() => {
-    toast.success("Product Added To Cart Successfully!", {
+    toast.success("Product Added To Cart Successfully !", {
       position: "top-center"
     });
   }, []);

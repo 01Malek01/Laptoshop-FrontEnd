@@ -1,4 +1,3 @@
-
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
@@ -10,6 +9,7 @@ import { QueryProvider } from "@/components/Provider/QueryContext";
 import { Suspense } from "react";
 import Loading from "./loading";
 import SortProvider from "@/components/Provider/SortContext";
+import { AuthProvider } from "@/components/Provider/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -24,13 +24,15 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} container`}>
         <DropdownProvider>
           <QueryProvider>
-            <Navbar  />
             <JWTProvider >
               <QuantityProvider>
                 <SortProvider>
-                  <Suspense fallback={<Loading />}>
-                    {children}
-                  </Suspense>
+                  <AuthProvider>
+                    <Suspense fallback={<Loading />}>
+                      <Navbar />
+                      {children}
+                    </Suspense>
+                  </AuthProvider>
                 </SortProvider>
               </QuantityProvider>
             </JWTProvider>

@@ -58,7 +58,7 @@ const Products = ({ laptops, showMoreButton }) => {
 
       <div className={`${styles.products} bg-[#ffffff] flex p-4 justify-center items-center gap-4 `}>
         {laptopsToDisplay?.map((laptop) => (
-          <div key={laptop._id} className=" bg-slate-100 sm:w-96 p-2 max-h-[700x] border m-auto  ">
+          <div key={laptop._id} className=" bg-slate-100 w-full md:w-96 p-2 max-h-[700x] border m-auto  ">
             <figure className=""><Image className="w-full max-h-[250px]" src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
             <div className="card-body text-slate-500">
               <h2 className="card-title">
