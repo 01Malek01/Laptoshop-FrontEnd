@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import useCart from '@/hooks/fetchCart';
 import Image from 'next/image';
@@ -10,7 +9,7 @@ function Page() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = typeof window !== 'undefined' && localStorage.getItem('jwt');
+      const token = localStorage.getItem('jwt') || '';
       setJwt(token);
     }
   }, []);
@@ -70,7 +69,7 @@ function Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {items?.map(el => (
+                  {items.map(el => (
                     <tr key={el._id} className="text-center">
                       <th>{el.productId.brand}</th>
                       <td>{el.productId.model}</td>
@@ -91,21 +90,7 @@ function Page() {
               <div className="divider"></div>
               <div className="text-center font-bold m-10 flex-col gap-5">
                 <div>Total price: {cart.other?.data?.totalPrice?.toFixed(2)} $</div>
-                {/* Open the modal using document.getElementById('ID').showModal() method */}
-                <button className="btn btn-primary m-auto text-center mt-5" onClick={() => document.getElementById('my_modal_5').showModal()}>Checkout</button>
-                <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-                  <div className="modal-box">
-                    <p className="py-4 text-slate-100">Total price: {cart.other?.data?.totalPrice?.toFixed(2)}$</p>
-                    <p className="py-4 text-slate-100">Press next to checkout</p>
-                    <div className="modal-action">
-                      <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn">Close</button>
-                        <button className="btn">Next</button>
-                      </form>
-                    </div>
-                  </div>
-                </dialog>
+                <Link href={"/checkout"} className="btn btn-primary">Checkout</Link>
               </div>
             </>
           )
