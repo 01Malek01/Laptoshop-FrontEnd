@@ -39,7 +39,7 @@ const useCart = () => {
   if (jwt) {
    refetch();
   }
- }, [jwt, refetch]);
+ }, [jwt]);
 
  return { cart, refetch };
 };

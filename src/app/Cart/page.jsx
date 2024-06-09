@@ -49,7 +49,7 @@ function Page() {
     <div className='w-full bg-slate-100 text-black h-full'>
       <div className="overflow-x-auto">
         {
-          !items?.length ? (
+          items?.length === 0 ? (
             <div className="text-center font-bold m-10 text-xl">
               Your cart is empty
               <div className="divider"></div>
@@ -69,7 +69,7 @@ function Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map(el => (
+                  {items?.map(el => (
                     <tr key={el._id} className="text-center">
                       <th>{el.productId.brand}</th>
                       <td>{el.productId.model}</td>
