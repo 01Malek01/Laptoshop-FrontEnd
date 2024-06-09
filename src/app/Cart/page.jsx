@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import useCart from '@/hooks/fetchCart';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 function Page() {
   const [jwt, setJwt] = useState('');
@@ -15,8 +16,7 @@ function Page() {
   }, []);
 
   const { cart, refetch } = useCart();
-  const items = cart.other?.data?.items;
-
+  const items = useMemo (() => cart.other?.data?.items, [cart.other?.data?.items]);
   const removeItem = async (id) => {
     try {
       if (!id) {
@@ -75,7 +75,7 @@ function Page() {
                       <td>{el.productId.model}</td>
                       <td>{el.productId.price}$</td>
                       <td className="flex items-center justify-center">
-                        <Image alt={el.productId.brand} src={el.productId.image} width={100} height={100} />
+                        <Image loading="lazy" alt={el.productId.brand} src={el.productId.image} width={100} height={100} />
                       </td>
                       <td>{el.quantity}</td>
                       <td>

@@ -180,7 +180,7 @@ function Profile() {
             </div>
             <div>
               <div className="flex justify-center items-center flex-wrap">
-                <span className="text-black p-4">Name</span>
+                  <div className="text-black p-4 w-full md:w-auto">Name</div>
                 {editName ? (
                   <>
                     <label className="input input-bordered flex items-center gap-2">
@@ -201,21 +201,22 @@ function Profile() {
                     <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditName(false)}>Cancel</button>
                   </>
                 ) : (
-                  <label className="input input-bordered flex items-center gap-2">
+                  <label className="input input-bordered flex items-center  w-[200px] md:w-[300px]  gap-2">
+
                     <input
                       type="text"
-                      className="grow"
+                      className="grow min-w-[150px]"
                       value={user?.name}
                       disabled={editName}
                     />
-                    <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditName(true)}>
+                    <button className="btn btn-accent ml-[-3rem] md:ml-0  h-[80%]" onClick={() => setEditName(true)}>
                       Edit Name
                     </button>
                   </label>
                 )}
               </div>
               <div className="flex justify-center items-center flex-wrap">
-                <span className="text-black p-4">Email</span>
+                <div className="text-black p-4 w-full md:w-auto">Email</div>
                 {editEmail ? (
                   <>
                     <input
@@ -233,14 +234,14 @@ function Profile() {
                     <button type="button" className="btn btn-secondary ml-1 h-[80%]" onClick={() => setEditEmail(false)}>Cancel</button>
                   </>
                 ) : (
-                  <label className="input input-bordered flex items-center gap-2">
+                  <label className="input input-bordered flex  items-center gap-2 w-[200px] md:w-[300px]  ">
                     <input
                       type="text"
-                      className="grow"
+                      className="grow min-w-[150px]"
                       value={user?.email}
                       disabled={editEmail}
                     />
-                    <button className="btn btn-accent ml-2 h-[80%]" onClick={() => setEditEmail(true)}>
+                    <button className="btn btn-accent ml-[-3rem] md:ml-0  h-[80%]" onClick={() => setEditEmail(true)}>
                       Edit Email
                     </button>
                   </label>

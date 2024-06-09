@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Product() {
   const [laptop, setLaptop] = useState({});
-  const [authorized, setAuthorized] = useState(false);
   const { quantity } = useQuantityContext();
   const params = useParams();
   const [jwt, setJwt] = useState('');
@@ -34,11 +33,9 @@ function Product() {
         });
 
         setLaptop(response.data.data.laptop);
-        setAuthorized(true);
       } catch (error) {
         console.error('Error:', error);
         if (error.response && error.response.status === 401) {
-          setAuthorized(false);
         }
       }
     };
@@ -74,11 +71,11 @@ function Product() {
   return (
     <>
       <ToastContainer />
-      {authorized ? (
+      {jwt ? (
         <div className='bg-white flex justify-center items-center'>
           <div className='flex flex-col md:flex-row md:gap-[20rem] justify-center items-center text-black bg-slate-50 h-fit w-fit p-5 rounded-lg'>
             <div className='flex flex-col justify-center items-center md:h-screen text-black'>
-              <Image src={laptop.image} alt={laptop.title} width={500} height={500} />
+              <Image loading = "lazy" src={laptop.image} alt={laptop.title} width={500} height={500} />
             </div>
             <div className="flex flex-col justify-center items-center h-screen">
               <div className="max-w-md md:space-y-4">

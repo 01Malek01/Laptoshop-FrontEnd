@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/Provider/AuthContext';
 
 const UsernameIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70">
@@ -21,11 +22,11 @@ const Signup = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { loggedIn, setLoggedIn } = useAuth();
+
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     const res = await fetch(`${process.env.API_URL}/users/signup`, {
       method: 'POST',
       headers: {
@@ -34,8 +35,13 @@ const Signup = () => {
       credentials: 'include',
       body: JSON.stringify(data),
     });
-
+    const result = await res.json(); // Parse the response body as JSON
+    const token = result.token; // Access the token from the parsed data
     if (res.ok) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('jwt', token); // Store the token in local storage
+        setLoggedIn(true);
+      }
       router.push('/');
       router.refresh();
     } else if (res.status === 400) {
@@ -46,7 +52,7 @@ const Signup = () => {
     console.log(res);
   };
 
-  const inputStyles =useMemo(() => "input input-bordered flex items-center gap-2", []);
+  const inputStyles = useMemo(() => "input input-bordered flex items-center gap-2", []);
   const formContainerStyles = useMemo(() => "container max-w-[500px] mx-auto my-20 flex flex-col p-10 bg-slate-50 gap-3 rounded-lg", []);
   const errorMessageStyles = useMemo(() => "text-red-500", []);
 

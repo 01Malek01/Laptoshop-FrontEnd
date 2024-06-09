@@ -41,7 +41,10 @@
 
 body {
   background: #66bafe;
-  height: 100vh;
   padding: 0 10px;
   max-width: fit-content;
 }
+html, body {
+  overflow-x: hidden;
+}
+
