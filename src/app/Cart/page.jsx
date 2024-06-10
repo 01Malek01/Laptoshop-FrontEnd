@@ -6,44 +6,44 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 
 function Cart() {
-  const [jwt, setJwt] = useState('');
+  // const [jwt, setJwt] = useState('');
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('jwt') || '';
-      setJwt(token);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const token = localStorage.getItem('jwt') || '';
+  //     setJwt(token);
+  //   }
+  // }, []);
 
-  const { cart, refetch } = useCart();
-  const items = useMemo (() => cart.other?.data?.items, [cart.other?.data?.items]);
-  const removeItem = async (id) => {
-    try {
-      if (!id) {
-        throw new Error('Item ID is required');
-      }
+  // const { cart, refetch } = useCart();
+  // const items = useMemo (() => cart.other?.data?.items, [cart.other?.data?.items]);
+  // const removeItem = async (id) => {
+  //   try {
+  //     if (!id) {
+  //       throw new Error('Item ID is required');
+  //     }
 
-      const res = await fetch(`${process.env.API_URL}/cart`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`, // Your access token
-        },
-        body: JSON.stringify({ id: id }),
-      });
+  //     const res = await fetch(`${process.env.API_URL}/cart`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${jwt}`, // Your access token
+  //       },
+  //       body: JSON.stringify({ id: id }),
+  //     });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP error! Status: ${res.status}`);
+  //     }
 
-      // Refetch the cart data
-      await refetch();
-      // Alternatively, you can use router.refresh() to reload the page
-      // router.refresh();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  //     // Refetch the cart data
+  //     await refetch();
+  //     // Alternatively, you can use router.refresh() to reload the page
+  //     // router.refresh();
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // };
 
   return (
     // <div className='w-full bg-slate-100 text-black h-full'>
