@@ -61,7 +61,7 @@ const Navbar = () => {
                 )}
               </Link>
             </div>
-            <Link href="/cart" className={styles.cart}>
+            <Link href="/cartPage" className={styles.cart}>
               <FaCartShopping size={30} className={styles.icon} />
             </Link>
           </div>
