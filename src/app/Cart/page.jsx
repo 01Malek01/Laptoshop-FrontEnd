@@ -46,57 +46,58 @@ function Cart() {
   };
 
   return (
-    <div className='w-full bg-slate-100 text-black h-full'>
-      <div className="overflow-x-auto">
-        {
-          items?.length === 0 ? (
-            <div className="text-center font-bold m-10 text-xl">
-              Your cart is empty
-              <div className="divider"></div>
-              <Link href={"/products-page"} className="btn btn-primary">Shop Now</Link>
-            </div>
-          ) : (
-            <>
-              <table className="table">
-                {/* head */}
-                <thead>
-                  <tr className="text-center">
-                    <th>Brand</th>
-                    <th>Price</th>
-                    <th>Model</th>
-                    <th>Image</th>
-                    <th>Quantity</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items?.map(el => (
-                    <tr key={el._id} className="text-center">
-                      <th>{el.productId.brand}</th>
-                      <td>{el.productId.model}</td>
-                      <td>{el.productId.price}$</td>
-                      <td className="flex items-center justify-center">
-                        <Image loading="lazy" alt={el.productId.brand} src={el.productId.image} width={100} height={100} />
-                      </td>
-                      <td>{el.quantity}</td>
-                      <td>
-                        <button className='btn btn-error rounded' onClick={() => removeItem(el.productId._id)}>
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="divider"></div>
-              <div className="text-center font-bold m-10 flex-col gap-5">
-                <div>Total price: {cart.other?.data?.totalPrice?.toFixed(2)} $</div>
-                <Link href={''} className="btn btn-primary">Checkout</Link>
-              </div>
-            </>
-          )
-        }
-      </div>
-    </div>
+    // <div className='w-full bg-slate-100 text-black h-full'>
+    //   <div className="overflow-x-auto">
+    //     {
+    //       items?.length === 0 ? (
+    //         <div className="text-center font-bold m-10 text-xl">
+    //           Your cart is empty
+    //           <div className="divider"></div>
+    //           <Link href={"/products-page"} className="btn btn-primary">Shop Now</Link>
+    //         </div>
+    //       ) : (
+    //         <>
+    //           <table className="table">
+    //             {/* head */}
+    //             <thead>
+    //               <tr className="text-center">
+    //                 <th>Brand</th>
+    //                 <th>Price</th>
+    //                 <th>Model</th>
+    //                 <th>Image</th>
+    //                 <th>Quantity</th>
+    //               </tr>
+    //             </thead>
+    //             <tbody>
+    //               {items?.map(el => (
+    //                 <tr key={el._id} className="text-center">
+    //                   <th>{el.productId.brand}</th>
+    //                   <td>{el.productId.model}</td>
+    //                   <td>{el.productId.price}$</td>
+    //                   <td className="flex items-center justify-center">
+    //                     <Image loading="lazy" alt={el.productId.brand} src={el.productId.image} width={100} height={100} />
+    //                   </td>
+    //                   <td>{el.quantity}</td>
+    //                   <td>
+    //                     <button className='btn btn-error rounded' onClick={() => removeItem(el.productId._id)}>
+    //                       Remove
+    //                     </button>
+    //                   </td>
+    //                 </tr>
+    //               ))}
+    //             </tbody>
+    //           </table>
+    //           <div className="divider"></div>
+    //           <div className="text-center font-bold m-10 flex-col gap-5">
+    //             <div>Total price: {cart.other?.data?.totalPrice?.toFixed(2)} $</div>
+    //             <Link href={''} className="btn btn-primary">Checkout</Link>
+    //           </div>
+    //         </>
+    //       )
+    //     }
+    //   </div>
+    // </div>
+    <div>cart page</div>
   );
 }
 
