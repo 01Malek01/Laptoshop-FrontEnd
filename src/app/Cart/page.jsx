@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
 
-function Page() {
+function Cart() {
   const [jwt, setJwt] = useState('');
 
   useEffect(() => {
@@ -90,7 +90,7 @@ function Page() {
               <div className="divider"></div>
               <div className="text-center font-bold m-10 flex-col gap-5">
                 <div>Total price: {cart.other?.data?.totalPrice?.toFixed(2)} $</div>
-                <Link href={"/checkout"} className="btn btn-primary">Checkout</Link>
+                <Link href={''} className="btn btn-primary">Checkout</Link>
               </div>
             </>
           )
@@ -100,4 +100,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default Cart;
