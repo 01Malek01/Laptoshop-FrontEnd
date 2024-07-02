@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,35 +21,44 @@ const EmailIcon = () => (
 const Signup = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const { loggedIn, setLoggedIn } = useAuth();
 
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    const res = await fetch(`${process.env.API_URL}/users/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    });
-    const result = await res.json(); // Parse the response body as JSON
-    const token = result.token; // Access the token from the parsed data
-    if (res.ok) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('jwt', token); // Store the token in local storage
-        setLoggedIn(true);
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${process.env.API_URL}/users/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      const token = result.token;
+
+      if (res.ok) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('jwt', token);
+          setLoggedIn(true);
+        }
+        router.push('/');
+        router.refresh();
+      } else if (res.status === 400) {
+        setErrorMessage('Email already exists');
+      } else {
+        setErrorMessage('Signup failed. Please try again.');
       }
-      router.push('/');
-      router.refresh();
-    } else if (res.status === 400) {
-      setErrorMessage('Email already exists');
-    } else {
-      setErrorMessage('Signup failed. Please try again.');
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again later.');
+    } finally {
+      setLoading(false);
     }
-    console.log(res);
   };
 
   const inputStyles = useMemo(() => "input input-bordered flex items-center gap-2", []);
@@ -107,7 +116,14 @@ const Signup = () => {
       </label>
       {errors.confirmPassword && <p className={errorMessageStyles}>Passwords do not match.</p>}
 
-      <button className="btn btn-primary mt-2">Register</button>
+      <button className="btn btn-primary mt-2" type="submit" disabled={loading}>
+        {loading ? (
+          <span className='loading loading-spinner loading-md'>
+          </span>
+        ) : (
+          'Register'
+        )}
+      </button>
       {errorMessage && <p className={errorMessageStyles}>{errorMessage}</p>}
     </form>
   );

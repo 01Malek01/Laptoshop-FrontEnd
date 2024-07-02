@@ -14,6 +14,7 @@ function Product() {
   const { quantity } = useQuantityContext();
   const params = useParams();
   const [jwt, setJwt] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -36,6 +37,7 @@ function Product() {
       } catch (error) {
         console.error('Error:', error);
         if (error.response && error.response.status === 401) {
+          // handle unauthorized error
         }
       }
     };
@@ -46,12 +48,13 @@ function Product() {
   }, [params.id, jwt]);
 
   const notify = useCallback(() => {
-    toast.success("Product Added To Cart Successfully !", {
+    toast.success("Product Added To Cart Successfully!", {
       position: "top-center"
     });
   }, []);
 
   const handleAddToCart = useCallback(async () => {
+    setLoading(true);
     try {
       await axios.post(`${process.env.API_URL}/cart`, {
         productId: params.id,
@@ -65,6 +68,8 @@ function Product() {
       notify();
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   }, [params.id, quantity, jwt, notify]);
 
@@ -72,14 +77,14 @@ function Product() {
     <>
       <ToastContainer />
       {jwt ? (
-        <div className='bg-white flex justify-center items-center'>
-          <div className='flex flex-col md:flex-row md:gap-[20rem] justify-center items-center text-black bg-slate-50 h-fit w-fit p-5 rounded-lg'>
-            <div className='flex flex-col justify-center items-center md:h-screen text-black'>
-              <Image loading = "lazy" src={laptop.image} alt={laptop.title} width={500} height={500} />
+        <div className='bg-gray-100 min-h-screen flex justify-center items-center p-5'>
+          <div className='flex flex-col md:flex-row md:gap-16 justify-center items-center text-gray-800 bg-white shadow-lg rounded-lg p-10'>
+            <div className='flex flex-col justify-center items-center md:h-screen text-gray-800'>
+              <Image loading="lazy" src={laptop.image} alt={laptop.title} width={500} height={500} className='rounded-lg' />
             </div>
-            <div className="flex flex-col justify-center items-center h-screen">
-              <div className="max-w-md md:space-y-4">
-                <h1 className="text-3xl font-bold text-gray-800">Product Details</h1>
+            <div className="flex flex-col justify-center items-center h-full md:h-screen">
+              <div className="max-w-md space-y-4 text-center md:text-left">
+                <h1 className="text-3xl font-bold text-blue-600">Product Details</h1>
                 <div className="flex flex-col gap-2">
                   {[
                     { label: 'Brand', value: laptop.brand },
@@ -96,10 +101,20 @@ function Product() {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between items-center flex-col gap-5">
+                <div className="flex flex-col items-center gap-5">
                   <QuantityInput />
-                  <button type="button" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={handleAddToCart}>
-                    Add To Cart
+                  <button
+                    type="button"
+                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading ? 'cursor-not-allowed opacity-50' : ''}`}
+                    onClick={handleAddToCart}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="loading-spinner loading" role="status">
+                      </span>
+                    ) : (
+                      'Add To Cart'
+                    )}
                   </button>
                 </div>
               </div>
@@ -107,9 +122,11 @@ function Product() {
           </div>
         </div>
       ) : (
-        <div className='bg-white flex flex-col justify-center items-center text-black h-full text-[25px] bold'>
+        <div className='bg-white min-h-screen flex flex-col justify-center items-center text-gray-800 text-xl font-bold'>
           Please Login to view this page.
-          <Link href='/login' className='btn hover:bg-[#599FAE] m-5'>Login</Link>
+          <Link href='/login' className='btn mt-5 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded'>
+            Login
+          </Link>
         </div>
       )}
     </>

@@ -5,9 +5,9 @@ import Link from 'next/link'
 const MenuBtn = ({ label, listItems, href,onClick }) => {
   return (
     <Link href={href} >
-      <div className={`dropdown ${listItems?.length > 0 ? 'dropdown-hover' : ''}`}>
+      <div className={` dropdown ${listItems?.length > 0 ? 'dropdown-hover' : ''}`}>
         <div tabIndex={0} role="button" className="flex" onClick={onClick}>
-          <span className={`${styles.label} text-black text-xl md:text-md hover:underline `}>{label}</span> <IoIosArrowDown size={20} className={`${listItems?.length > 0 ? ' ' : 'hidden'} `} />
+          <span className={`${styles.label} text-black text-[14px] md:text-[16px] md:text-md hover:underline `}>{label}</span> <IoIosArrowDown size={20} className={`${listItems?.length > 0 ? ' ' : 'hidden'} `} />
         </div>
         {
           listItems?.length > 0 && (

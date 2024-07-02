@@ -15,10 +15,14 @@ const EmailIcon = () => (
 const Login = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
-const {loggedIn, setLoggedIn} = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { loggedIn, setLoggedIn } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = e.target.elements;
+
+    setLoading(true);
 
     try {
       const res = await fetch(`${process.env.API_URL}/users/login`, {
@@ -33,14 +37,15 @@ const {loggedIn, setLoggedIn} = useAuth();
       if (!res.ok) {
         const errorData = await res.json();
         setErrorMessage(errorData.message || 'Login failed. Please try again.');
+        setLoading(false);
         return;
       }
 
-      const data = await res.json(); // Parse the response body as JSON
-      const token = data.token; // Access the token from the parsed data
+      const data = await res.json();
+      const token = data.token;
 
       if (typeof window !== 'undefined') {
-        localStorage.setItem('jwt', token); // Store the token in local storage
+        localStorage.setItem('jwt', token);
         setLoggedIn(true);
       }
 
@@ -49,6 +54,8 @@ const {loggedIn, setLoggedIn} = useAuth();
     } catch (error) {
       console.error('Error during login:', error);
       setErrorMessage('An unexpected error occurred. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,7 +72,14 @@ const {loggedIn, setLoggedIn} = useAuth();
           <input type="password" name="password" className="grow" placeholder="Password" />
         </label>
         {errorMessage && <div className="text-red-500 text-center mt-2">{errorMessage}</div>}
-        <button className="btn btn-primary mt-2">Login</button>
+        <button className="btn btn-primary mt-2 " type="submit " disabled={loading}>
+          {loading ? (
+            <span className='loading loading-spinner loading-md'>
+            </span>
+          ) : (
+            'Login'
+          )}
+        </button>
         <div className="text-center text-black">
           <p>Don&apos;t have an account? <Link className='text-blue-500 underline' href="/signup">Register</Link></p>
         </div>

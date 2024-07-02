@@ -12,6 +12,7 @@ const Products = ({ laptops, showMoreButton }) => {
   const [fetchedLaptops, setFetchedLaptops] = useState(laptops); // Store fetched data
   const [filter, setFilter] = useState({ price: '999999', ramSize: '' }); // Filter state
   const [filteredLaptops, setFilteredLaptops] = useState([]); // Filtered laptops state
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     setFetchedLaptops(laptops); // Set initial data
@@ -35,13 +36,14 @@ const Products = ({ laptops, showMoreButton }) => {
   const handleShowMoreClick = async () => {
     if (fetchedLaptops.length >= 22) {
       return alert('No more laptops');
-    }
-    else {
+    } else {
+      setLoading(true);
       const newLimit = limit + 5; // Increment limit
       const res = await axios.get(`${process.env.API_URL}/laptops?limit=${newLimit}`);
       const newLaptops = res.data.data.laptops;
       setFetchedLaptops(prevLaptops => [...prevLaptops, ...newLaptops]); // Append new data
       setLimit(newLimit); // Update internal limit state for tracking
+      setLoading(false);
     }
   };
 
@@ -75,7 +77,20 @@ const Products = ({ laptops, showMoreButton }) => {
         ))}
       </div>
       <div className={`${showMoreButton ? 'flex' : 'hidden'} justify-center p-4 m-3`}>
-        <button className={`btn bg-[#19202F] hover:bg-slate-300 hover:text-black disabled:opacity-80 disabled:text-slate-500`} onClick={handleShowMoreClick} disabled={fetchedLaptops?.length >= 22} >{fetchedLaptops?.length >= 22 ? 'No more laptops' : 'Show More'}</button>
+        <button
+          className={`relative btn bg-[#19202F] hover:bg-slate-300 hover:text-black disabled:opacity-80 disabled:text-slate-500`}
+          onClick={handleShowMoreClick}
+          disabled={loading || fetchedLaptops?.length >= 22}
+        >
+          {loading && (
+            <svg
+              className="absolute inset-0 m-auto animate-spin h-5 w-5 text-white"
+              viewBox="0 0 24 24"
+            ></svg>
+          )}
+          {loading ? 'Loading...' : fetchedLaptops?.length >= 22 ? 'No more laptops' : 'Show More'}
+        </button>
+
       </div>
     </div>
   );

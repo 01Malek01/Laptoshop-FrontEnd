@@ -3,8 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from 'next/image'
-import { Suspense } from "react";
-import styles from '../Sliders/sliders.module.css'
+
 
 function DailySalesSlider({ laptops }) {
  var settings = {
@@ -28,7 +27,7 @@ function DailySalesSlider({ laptops }) {
      laptops?.map((laptop) => {
       return (
        <div key={laptop._id} className=" bg-[#19202F] sm:flex sm:justify-center md:w-96 md:p-2 h-[400px] ">
-        <figure><Image src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
+        <figure className="max-h-[200px]"><Image className="md:p-12  md:block shadow " src={laptop.image} alt={laptop.brand} width={350} height={200} /></figure>
         <div className="card-body">
          <h2 className="card-title">
           {laptop.brand} {laptop.model}
