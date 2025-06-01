@@ -24,6 +24,7 @@ export default async function Home() {
 
     const data = await res.json();
     laptops = data?.data?.laptops || [];
+    console.log('fetched data',data)
   } catch (error) {
     console.error('Error fetching laptops:', error);
   }
